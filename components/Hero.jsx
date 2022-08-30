@@ -7,7 +7,7 @@ import { GrTransaction } from "react-icons/gr";
 
 
 const style = {
-    sectionWrapper: `flex justify-center items-center flex-col w-full`,
+    sectionWrapper: `flex justify-center items-center flex-col w-[100%]`,
     contentWrapper: `flex flex-col justify-between items-center md:flex-row md:m-[8rem] flex-1`,
     contentItems: `flex justify-content items-start flex-col md:mx-10 mx-10 my-[3rem]`,
     cardContainer: `rounded-[5rem] flex flex-col md:w-[350px] md:h-[450px]`,
