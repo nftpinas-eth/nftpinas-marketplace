@@ -5,7 +5,6 @@ import { ethers } from "ethers"
 import Image from 'next/image'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { marketplaceAddress, mintAddress } from '../config'
 
 const style = {
     container: `flex flex-row justify-center item-center `,
