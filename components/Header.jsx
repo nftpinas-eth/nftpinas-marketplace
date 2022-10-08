@@ -133,7 +133,7 @@ const Header = () => {
             <div className={style.navbarItem}> Explore </div>
           </Link>
           <Link href="/">
-            <div className={style.navbarItem}> Collection </div>
+            <div className={style.navbarItem}> My Collection </div>
           </Link>
           <Link href="/mint">
             <div className={style.navbarItem}> Mint </div>
