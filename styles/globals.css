@@ -3,6 +3,11 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
+input[type="text"]:focus ~ .input-text,
+input[type="text"]:not(:placeholder-shown) ~ .input-text{
+  @apply transform -translate-y-4 -translate-x-1 bg-white scale-75;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
