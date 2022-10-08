@@ -79,7 +79,7 @@ const Header = () => {
   }, [accounts]);
 
   return (
-    <div className={style.navbarWrapper} onLoad={connectMetaMask}>
+    <div className={style.navbarWrapper}>
       <title>NFTPinas</title>
       <link
         rel="apple-touch-icon"
@@ -129,13 +129,13 @@ const Header = () => {
           {accounts ? <CgProfile /> : <CgProfile />}
         </div>
         <ul className={style.navbarListItems}>
-          <Link href="/">
+          <Link href="/explore">
             <div className={style.navbarItem}> Explore </div>
           </Link>
-          <Link href="/collection">
-            <div className={style.navbarItem}> My Collection </div>
+          <Link href="/">
+            <div className={style.navbarItem}> Collection </div>
           </Link>
-          <Link href="/mintNFT">
+          <Link href="/mint">
             <div className={style.navbarItem}> Mint </div>
           </Link>
           <li className={style.wallet}>
@@ -205,7 +205,7 @@ const Header = () => {
                     </p>
                   </button>
                 ) : (
-                  <button onClick={() => connectWallet("injected")}>
+                  <button onClick={() => connectMetaMask()}>
                     Connect Wallet
                   </button>
                 )}
