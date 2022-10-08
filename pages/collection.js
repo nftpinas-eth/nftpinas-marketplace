@@ -17,6 +17,8 @@ const style = {
 const collection = () => {
   const [data, fetchData] = useState([])
   const [walletAddress, setWalletAddress] = useState("")
+  const [loading, setLoading] = useState(true)
+
 
     const initializeContract = async (accounts) => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -53,7 +55,7 @@ const collection = () => {
       } 
 
       fetchData(data)
-
+      setLoading(false)
       }
 
     }
@@ -61,6 +63,18 @@ const collection = () => {
     useEffect (()=>{
       initializeContract()
     }, [])
+
+    if (loading) return (
+        <>
+              <Header />
+                <div className={style.container}>
+                  <div className={style.subContainer}>
+                    <h2>Loading.. Please Wait</h2>
+                  </div>
+                </div>
+              <Footer />
+        </>
+      )
 
     return (
     <>
