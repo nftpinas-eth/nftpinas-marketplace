@@ -132,8 +132,8 @@ const Header = () => {
           <Link href="/explore">
             <div className={style.navbarItem}> Explore </div>
           </Link>
-          <Link href="/">
-            <div className={style.navbarItem}> My Collection </div>
+          <Link href="/mynfts">
+            <div className={style.navbarItem}> My NFTs </div>
           </Link>
           <Link href="/mint">
             <div className={style.navbarItem}> Mint </div>
