@@ -28,17 +28,17 @@ export async function getServerSideProps() {
     const ownerToken = await nft.ownerOf(i)
     const owner = ownerToken.toLowerCase()
 
-      const uri = await nft.tokenURI(i)
-      const response = await fetch(uri)
-      const metadata = await response.json()
+    const uri = await nft.tokenURI(i)
+    const response = await fetch(uri)
+    const metadata = await response.json()
 
-      data.push ({
-        id: i,
-        address: owner,
-        image: metadata.image,
-        name: metadata.name,
-        description: metadata.description
-      })
+    data.push ({
+      id: i,
+      address: owner,
+      image: metadata.image,
+      name: metadata.name,
+      description: metadata.description
+    })
 
   }
 
@@ -49,7 +49,7 @@ export async function getServerSideProps() {
   }
 }
 
-const collection = ({ nfts }) => {
+const mynfts = ({ nfts }) => {
    const [address, setAddress] = useState("")
 
     useEffect (()=>{
@@ -72,43 +72,47 @@ const collection = ({ nfts }) => {
 
     }
 
+    const result =  nfts.filter((nft) => {
+      if (nft.address === address ) {
+        return(nft)
+      }
+    })
 
     return (
-    <>
-    <Header />
-      <div className={style.container}>
-          <div className={style.subContainer}>
-            {nfts.map((nft, id) =>( address === nft.address ? ( 
-            
-              <div key={nft.id} className={style.nftContainer}>
-                <div className="p-4">
-                  <Image
-                      src={nft.image}
-                      alt="Picture of the author"
-                      width={500}
-                      height={500}
-                  />
-                  <p style={{ height: '64px'}} className={style.nftTitle}>
-                    {nft.name}
-                  </p>
-                  <div style={{ height: '70px', overflow: 'hidden'}}>
-                    <p className={style.nftDescription}>{nft.description}</p>
+      <>
+      <Header />
+        <div className={style.container}>
+          {result.length > 0 ?
+            <div className={style.subContainer}>
+              {result.map((nft) => 
+              
+                <div key={nft.name} className={style.nftContainer}>
+                  <div className="p-4">
+                    <Image
+                        src={nft.image}
+                        alt="Picture of the author"
+                        width={500}
+                        height={500}
+                    />
+                    <p style={{ height: '64px'}} className={style.nftTitle}>
+                      {nft.name}
+                    </p>
+                    <div style={{ height: '70px', overflow: 'hidden'}}>
+                      <p className={style.nftDescription}>{nft.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            
-            ) : ( 
-            <div> 
-              <main style={{ padding: "1rem 0" }}>
-                <h2>No listed assets</h2>
-              </main>
-            </div> 
-            )))}
-          </div>
-      </div>
-    <Footer />
-    </>
+              )}
+            </div>
+          : (
+            <main style={{ padding: "1rem 0" }}>
+              <h2>No listed assets</h2>
+            </main>
+          )}
+        </div>
+      <Footer />
+      </>
     )
 }
 
-export default collection
+export default mynfts
