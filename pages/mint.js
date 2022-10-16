@@ -1,105 +1,139 @@
-import React from 'react'
-import { useRouter  } from 'next/router' 
-import { Row, Button } from 'react-bootstrap'
-import { Contract, ethers } from 'ethers'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Button } from 'react-bootstrap'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { Buffer } from 'buffer';
+import Image from 'next/image'
 import { create as  ipfsClient } from "ipfs-http-client" 
-import { BiWindows } from 'react-icons/bi'
-import Link from "next/link";
-import { marketplaceAddress, mintAddress } from '../config'
 
 // CSS Style
 const style = {
-    contentWrapper: `flex justify-center items-center flex-col w-full`,
-    contentItems: `flex flex-col justify-center items-center`,
-    formItems: ` w-full flex h-[2.5rem] px-[1rem] my-[0.5rem] border-[1.5px] rounded-[0.5rem] hover:bg-[#EEEEEF] border-black`,
-    formFile: `flex items-center justify-center border-[1px] border-dashed border-black display-none h-[8rem] rounded-[0.5rem]`,
+    mainContainer: `flex flex-row justify-center items-center`,
+    mainSubContainer: `flex flex-col w-[100vw] h-[50vw] my-[4rem] mx-[25rem]`,
+    title: `font-mono font-black text-4xl text-slate-900 `,
+    subTitle: `font-mono font-black text-lg text-slate-900 mt-[2rem]`,
+    description: `font-mono font-semibold text-sm text-slate-700`,
+    uploadContainer: `flex justify-center items-center w-[500px] h-[300px] p-[1.5rem] rounded-lg border-2 border-slate-700 border-dashed cursor-pointer`,
+    uploadInfo: `font-mono font-semibold text-sm text-slate-700`,
+    input: ``,
+    thumbnail: `w-[100%] h-[100%] rounded-lg overflow-hidden relative`,
+    thumbnailInfo: `absolute bottom-0 left-0 w-[100%] text-center`,
+    formContainer: `flex flex-col`,
+    inputLabel: `relative my-[0.5rem]`,
+    inputItem: `h-10 w-[500px] border-2 p-3 border-slate-700 rounded-lg outline-none`,
+    spanItem: `font-mono font-semibold text-sm text-slate-700 bg-white absolute left-1 -top-2 mx-2 px-1 py-0 `,
     ctaContainer: `flex`,
-    accentedButton: ` relative text-lg font-semibold px-12 py-4 bg-[#2181e2] rounded-lg mr-5 text-white hover:bg-[#42a0ff] cursor-pointer`,
-    inputFile: `inset-0 z-50 m-0 p-0 w-full h-full outline-none opacity-0`,
-    inputFileContainer: `flex flex-col justify-center items-center p-10 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-white-800 dark:bg-white-700 hover:bg-gray-100 dark:border-white-600 dark:hover:border-gray-500 dark:hover:bg-white-600`,
-    inputFileSubContainer: `flex flex-col justify-center items-center`,
-    inputLabel: `relative m-[0.5rem]`,
-    inputItem: `h-10 w-[50] border-2 p-3 border-gray-300 rounded-lg outline-none focus:border-gray-500 placeholder-gray-300 placeholder-opacity-0 transition duration-200`,
-    spanItem: `text-md text-gray-500 bg-white absolute left-1 top-1.5 mx-2 px-1 py-0 transition duration-200 input-text`,
-
-};
+    accentedButton: `flex justify-center items-center w-[80px] h-[40px] relative text-lg font-mono font-semibold bg-black bg-slate-900 rounded-lg text-white hover:bg-slate-800 cursor-pointer`,
+}
 
 
 const Mint = ({ handler, nft }) => {
+    const [ file, setFile ] = useState('')
+    const [ url, setUrl ] = useState([])
+    const [ name, setName ] = useState('')
+    const [ description, setDescription ] = useState('')
+    const [ trait_type, setTraitType ] = useState('')
+    const [ value, setValue ] = useState('')
+    const [ imagePreview, setImagePreview ] = useState(false)
+    const [ image, setImage ] = useState('')
 
-    const [image, setImage] = useState('')
-    const [price, setPrice] = useState(null)
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
+    const uploadToIPFS = async (e) => {
+        e.preventDefault()
+        let file = e.target.files[0];
+        const fileType = file['type'];
+        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg'];
 
-    const uploadToIPFS = async (event, signer) => {
-        event.preventDefault()
-        const file = event.target.files[0]
-        if (typeof file !== 'undefined') {
+        if (validImageTypes.includes(fileType) && typeof file !== 'undefined') {            
             try {
+                const fileUrl = URL.createObjectURL(e.target.files[0])
+                setFile(file);
+                setUrl(fileUrl)
+                setImagePreview(true)
                 const result = await client.add(file)
-                console.log(result)
                 setImage(`https://nftpinas.infura-ipfs.io/ipfs/${result.path}`)
+                console.log(result)
                 handler()
             }
             catch (error) {
-                console.log("Error Uploading Image", error)
+                alert("Error Uploading Image", error)
             }
+        } else {
+            alert("Invalid File Type or Undefined")
         }
-    }
+    };
 
     const mintNFT = async () => {
-        if (!image || !name || !description) return alert("Please fill out the missing field.")
+        if ( !image || !name || !description ) return alert("Please fill out the missing field.")
 
         try {
-            const result = await client.add(JSON.stringify({image, name, description}))
+            const attributes = [{ trait_type, value }]
+            const result = await client.add(JSON.stringify({image, name, description, attributes}))
             const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
             const mintItem = await nft.mintItem(uri)
-
+            console.log(uri)
         } catch (error) {
             console.log("Error Minting Item", error)
         }
     }
 
-    return(
-        <>
-        <Header />
-        <div className={style.contentWrapper}>
-            <h1>Mint NFT</h1>
-            <Row className={style.contentItems}>
-                <label>Upload Media</label>
-                <label for="dropzone-file" className={style.inputFileContainer}>
-                    <div className={style.inputFileSubContainer}>
-                        <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Drop Media</span> or Upload</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">SUPPORTED FILE: SVG, PNG, JPG or GIF (MAX 50MB)</p>
-                    </div>
-                    <input id="dropzone-file" type="file" onChange={uploadToIPFS} className="hidden"></input>
-                </label>
+  return (
+    <>
+    <Header />
+     <div className={style.mainContainer}>
+        <div className={style.mainSubContainer}>
+            <h1 className={style.title}>Mint NFT</h1>
+            <p className={style.description}>Create and Mint your NFT on Layer 2.</p>
+            <h2 className={style.subTitle}> Upload Media *</h2>
+            <p className={style.description}>Max: 50MB | Supported File Type: JPEG, GIF, PNG and SVG.</p>
+            <label htmlFor="file" className={style.uploadContainer}>
+                { !imagePreview ? (
+                <span className={style.uploadInfo}> Drop or Upload Media </span>
+                ) : (
+                    <div className={style.thumbnail}>
+                    <Image
+                      src={url}
+                      alt="Image Preview"
+                      width={500}
+                      height={300}
+                    />
+                    {/*<img src={url} alt="Preview Picture" className='w-[100%] h-[100%]'/>
+                     <div className={style.thumbnailInfo}>test</div> */}
+                </div>
+                )}
+
+                <input type="file" id="file" onChange={uploadToIPFS} className='hidden'/>
+            </label>
+            <h2 className={style.subTitle}> General</h2>
+            <div className={style.formContainer}>
                 <label className={style.inputLabel}>
-                    <input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} className={style.inputItem} />
+                    <input type="text" onChange={(e) => setName(e.target.value)} className={style.inputItem} />
                     <span className={style.spanItem}>Name</span>
                 </label>
                 <label className={style.inputLabel}>
-                    <input type="text" placeholder="Description" onChange={(e) => setDescription(e.target.value)} className={style.inputItem} />
+                    <input type="text-area" onChange={(e) => setDescription(e.target.value)} className={style.inputItem} />
                     <span className={style.spanItem}>Description</span>
                 </label>
+            <h2 className={style.subTitle}> Attributes</h2>
+                <label className={style.inputLabel}>
+                    <input type="text" onChange={(e) => setTraitType(e.target.value)} className={style.inputItem} />
+                    <span className={style.spanItem}>Trait Type</span>
+                </label>
+                <label className={style.inputLabel}>
+                    <input type="text" onChange={(e) => setValue(e.target.value)} className={style.inputItem} />
+                    <span className={style.spanItem}>Value</span>
+                </label>
                 <div className={style.ctaContainer}>
-                <div className={style.accentedButton}>
                     <Button onClick={mintNFT} variant="primary" size="lg">
-                    Mint
+                        <div className={style.accentedButton}>
+                            Mint
+                        </div>
                     </Button>
                 </div>
-                </div>
-            </Row>
+            </div>
         </div>
-        <Footer/>
-        </>
-    );
+     </div>
+    <Footer />
+    </>
+  )
 }
 
 export default Mint
