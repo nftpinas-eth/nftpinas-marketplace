@@ -12,7 +12,7 @@ const style = {
     title: `font-mono font-black text-4xl text-slate-900 `,
     subTitle: `font-mono font-black text-lg text-slate-900 mt-[2rem]`,
     description: `font-mono font-semibold text-sm text-slate-700`,
-    uploadContainer: `flex justify-center items-center w-[500px] h-[300px] p-[1.5rem] rounded-lg border-2 border-slate-700 border-dashed cursor-pointer`,
+    uploadContainer: `flex justify-center items-center w-[500px] h-[500px] p-[1.5rem] rounded-lg border-2 border-slate-700 border-dashed cursor-pointer`,
     uploadInfo: `font-mono font-semibold text-sm text-slate-700`,
     input: ``,
     thumbnail: `w-[100%] h-[100%] rounded-lg overflow-hidden relative`,
@@ -93,8 +93,6 @@ const Mint = ({ handler, nft }) => {
                       src={url}
                       alt="Image Preview"
                       layout="fill"
-                      width={500}
-                      height={300}
                     />
                     {/*<img src={url} alt="Preview Picture" className='w-[100%] h-[100%]'/>
                      <div className={style.thumbnailInfo}>test</div> */}
