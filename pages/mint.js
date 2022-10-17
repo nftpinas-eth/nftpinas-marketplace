@@ -92,6 +92,7 @@ const Mint = ({ handler, nft }) => {
                     <Image
                       src={url}
                       alt="Image Preview"
+                      layout="fill"
                       width={500}
                       height={300}
                     />
