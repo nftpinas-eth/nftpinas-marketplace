@@ -14,44 +14,100 @@ function MyApp({ Component, pageProps }) {
 
 
   useEffect(() => {
-
+    const checkProvider = async () => {
+      if (window.ethereum) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x118' }], 
+          });
+        } catch (error) {
+          if (error.code === 4902) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                  {   
+                    chainId: '0x118',
+                    chainName: 'zkSync alpha testnet',
+                    rpcUrls: ['https://zksync2-testnet.zksync.dev'],
+                    nativeCurrency: {
+                        name: "zkSync ETH",
+                        symbol: "ETH",
+                        decimals: 18
+                    },
+                    blockExplorerUrls: ["https://explorer.zksync.io/"]
+                  },
+                ],
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+      }
+    }
   }, [])
 
   // Provider and Signer
-  const handler = async () => {
-    // Check if MetaMask is installed.
+  const initializeWallet = async () => {
+    console.log("handler triggered")
     if (window.ethereum) {
+      const chainId = await window.ethereum.request({ 
+        "jsonrpc": "2.0",
+        "method": "eth_chainId",
+        "params": [],
+        "id": 0
+      });
 
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts'});
-            setWalletAccount(accounts[0])
-        } catch (error) {
-            console.log("Error", error)
+      if (chainId === "0x118") {
+        try{
+          console.log(true)
+          const account = await window.ethereum.request({ 
+            method: 'eth_requestAccounts'
+          });
+          console.log(chainId)
+        }catch (error) {
+            console.log(error)
+            console.log('false')
         }
 
+      }
     } else {
         alert("Please install MetaMask")
     }
     
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const signer = provider.getSigner()
-    
-    loadContracts(signer)
+  }
 
+  const initializeContract = async () => {
+    if (window.ethereum) {
+      const chainId = await window.ethereum.request({ 
+        "jsonrpc": "2.0",
+        "method": "eth_chainId",
+        "params": [],
+        "id": 0
+      });
+      if (chainId === "0x118") {
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum)
+          const signer = provider.getSigner()
+          const marketplace =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, signer);
+          const nft =  new ethers.Contract(mintAddress, MintABI.abi, signer)
+          setMarketplace(marketplace)
+          setNFT(nft)
+        } catch (error) {
+          console.log(error)
+        }
+      } else {
+        alert("Connect to zkSync Network")
+      }
+    }
   }
 
 
-  const loadContracts = async (signer) => {
-    const marketplace =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, signer);
-    setMarketplace(marketplace)
-    const nft =  new ethers.Contract(mintAddress, MintABI.abi, signer)
-    setNFT(nft)
-
-  };
-
 
   return (
-      <Component {...pageProps} handler={handler} walletAccount={walletAccount} nft={nft} marketplace={marketplace} />
+      <Component {...pageProps} initializeWallet={initializeWallet} initializeContract={initializeContract} nft={nft} marketplace={marketplace} />
   )
 }
 
