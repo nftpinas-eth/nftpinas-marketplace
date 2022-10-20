@@ -12,7 +12,7 @@ const style = {
     title: `font-mono font-black text-4xl text-slate-900 `,
     subTitle: `font-mono font-black text-lg text-slate-900 mt-[2rem]`,
     description: `font-mono font-semibold text-sm text-slate-700`,
-    uploadContainer: `flex shrink-0 justify-center items-center w-[500px] h-[500px] p-[1.5rem] rounded-lg border-2 border-slate-700 border-dashed cursor-pointer`,
+    uploadContainer: `flex shrink-0 justify-center items-center w-[350px] h-[350px] p-[1.5rem] rounded-lg border-2 border-slate-700 border-dashed cursor-pointer`,
     uploadInfo: `font-mono font-semibold text-sm text-slate-700`,
     input: ``,
     thumbnail: `w-[100%] h-[100%] rounded-lg overflow-hidden relative`,
@@ -26,7 +26,7 @@ const style = {
 }
 
 
-const Mint = ({ handler, nft }) => {
+const Mint = ({ initializeContract, nft }) => {
     const [ file, setFile ] = useState('')
     const [ url, setUrl ] = useState([])
     const [ name, setName ] = useState('')
@@ -50,8 +50,7 @@ const Mint = ({ handler, nft }) => {
                 setImagePreview(true)
                 const result = await client.add(file)
                 setImage(`https://nftpinas.infura-ipfs.io/ipfs/${result.path}`)
-                console.log(result)
-                handler()
+                initializeContract()
             }
             catch (error) {
                 alert("Error Uploading Image", error)
@@ -69,7 +68,6 @@ const Mint = ({ handler, nft }) => {
             const result = await client.add(JSON.stringify({image, name, description, attributes}))
             const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
             const mintItem = await nft.mintItem(uri)
-            console.log(uri)
         } catch (error) {
             console.log("Error Minting Item", error)
         }
