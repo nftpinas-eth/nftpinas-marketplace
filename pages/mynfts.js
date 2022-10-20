@@ -18,28 +18,30 @@ const style = {
 }
 
 export async function getServerSideProps() {
-  const provider = new Provider("https://zksync2-testnet.zksync.dev");
-  const nft =  new ethers.Contract(mintAddress, MintABI.abi, provider)
-  const tokenCount = await nft.tokenCount()
-  
-  let data = []
+  const response = await fetch('')
+  const data = await response.json()
 
-  for (let i = 1; i <= tokenCount; i++) {
-    const ownerToken = await nft.ownerOf(i)
-    const owner = ownerToken.toLowerCase()
+  const provider1 = new Provider("https://zksync2-testnet.zksync.dev");
+  const nftContract =  new ethers.Contract(mintAddress, MintABI.abi, provider1)
 
-    const uri = await nft.tokenURI(i)
-    const response = await fetch(uri)
-    const metadata = await response.json()
+  const tokenCount = await nftContract.tokenCount()
+  const tokenNumber = tokenCount.toNumber()
 
-    data.push ({
-      id: i,
-      address: owner,
-      image: metadata.image,
-      name: metadata.name,
-      description: metadata.description
-    })
+  if (data.length !== tokenNumber) {
+    for (let i = data.length; i <= tokenNumber; i++) {
+      const ownerToken = await nftContract.ownerOf(i)
+      const owner = ownerToken.toLowerCase()
+      const uri = await nftContract.tokenURI(i)
+      const response = await fetch(uri)
+      const metadata = await response.json()
 
+      const resp = await fetch('', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ address: owner, image: metadata.image, name: metadata.name, description: metadata.description })})
+    }
   }
 
   return {
