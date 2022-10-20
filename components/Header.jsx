@@ -37,46 +37,68 @@ const Header = () => {
   const connectMetaMask = async () => {
     
     if (window.ethereum) {
-        try {
-            const account = await window.ethereum.request({ method: 'eth_requestAccounts'});
-            if (account.length) {
-              setAccounts(account[0])
-            } else {
-              console.log("MetaMask not connected")
-            }
-        } catch (error) {
-            console.log("Error Connectin to MetaMask", error)
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x118' }], 
+        });
+
+        const account = await window.ethereum.request({ 
+          method: 'eth_requestAccounts'
+        });
+        setAccounts(account[0])
+
+      } catch (error) {
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {   
+                  chainId: '0x118',
+                  chainName: 'zkSync alpha testnet',
+                  rpcUrls: ['https://zksync2-testnet.zksync.dev'],
+                  nativeCurrency: {
+                      name: "zkSync ETH",
+                      symbol: "ETH",
+                      decimals: 18
+                  },
+                  blockExplorerUrls: ["https://explorer.zksync.io/"]
+                },
+              ],
+            });
+          } catch (error) {
+            console.log(error);
+          }
         }
+
+      }
     } else {
-        alert("Please install MetaMask")
-    }
-    
+      alert("Please install MetaMask")
+  }
+  
 
-    window.ethereum.on('chainChanged', (chainId) => {
-      window.location.reload();
-    })
+  window.ethereum.on('chainChanged', (chainId) => {
+    window.location.reload();
+  })
 
-    window.ethereum.on('accountsChanged', async function (account) {
-      setAccounts(account[0])
-      await connectMetaMask()
-    })
+  window.ethereum.on('accountsChanged', async function (account) {
+    setAccounts(account[0])
+    setAccountStatus(true)
+    await connectMetaMask()
+  })
 
   }
 
   useEffect(() => {
-    connectMetaMask()
-
-    if (!accounts) return;
-    (async () => {
-      const userDoc = {
-        _type: "users",
-        _id: accounts,
-        userName: "NFTPinas_Users",
-        walletAddress: accounts,
-      };
-      const result = await client.createIfNotExists(userDoc);
-    })();
-  }, [accounts]);
+    const updateAccount = async () => {
+      if (accounts === undefined) {
+        const account = await window.ethereum.request({ method: 'eth_requestAccounts'});
+        setAccounts(account[0])
+      } 
+    }
+    updateAccount()
+  }, []);
 
   return (
     <div className={style.navbarWrapper}>
@@ -180,7 +202,7 @@ const Header = () => {
                   <MdOutlineExplore className="m-1 w-7 h-7" /> Explore{" "}
                 </div>
               </Link>
-              <Link href="/">
+              <Link href="/mynfts">
                 <div className={style.navbarItem}>
                   <BiCollection className="m-1 w-7 h-7" /> Collection{" "}
                 </div>
