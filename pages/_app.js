@@ -2,13 +2,11 @@ import '../styles/globals.css'
 import { Contract, ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import MarketplaceABI from "../contractsABI/Marketplace.json"
-import MintABI from "../contractsABI/Mint.json"
 import Header from "../components/Header"
-import { marketplaceAddress, mintAddress } from '../config'
+import { marketplaceAddress } from '../config'
 
 function MyApp({ Component, pageProps }) {
   const [marketplace, setMarketplace] = useState({})
-  const [nft, setNFT] = useState({})
   const [walletAccount, setWalletAccount] = useState(null)
   const [walletStatus, setWalletStatus] = useState(false)
 
@@ -92,9 +90,7 @@ function MyApp({ Component, pageProps }) {
           const provider = new ethers.providers.Web3Provider(window.ethereum)
           const signer = provider.getSigner()
           const marketplace =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, signer);
-          const nft =  new ethers.Contract(mintAddress, MintABI.abi, signer)
           setMarketplace(marketplace)
-          setNFT(nft)
         } catch (error) {
           console.log(error)
         }
@@ -107,7 +103,7 @@ function MyApp({ Component, pageProps }) {
 
 
   return (
-      <Component {...pageProps} initializeWallet={initializeWallet} initializeContract={initializeContract} nft={nft} marketplace={marketplace} />
+      <Component {...pageProps} initializeWallet={initializeWallet} initializeContract={initializeContract} marketplace={marketplace} />
   )
 }
 
