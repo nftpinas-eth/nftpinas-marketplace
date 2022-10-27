@@ -26,7 +26,7 @@ const style = {
 }
 
 
-const Mint = ({ initializeContract, nft }) => {
+const Mint = ({ initializeContract, marketplace }) => {
     const [ file, setFile ] = useState('')
     const [ url, setUrl ] = useState([])
     const [ name, setName ] = useState('')
@@ -67,7 +67,7 @@ const Mint = ({ initializeContract, nft }) => {
             const attributes = [{ trait_type, value }]
             const result = await client.add(JSON.stringify({image, name, description, attributes}))
             const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
-            const mintItem = await nft.mintItem(uri)
+            const mintItem = await marketplace.mintItem(uri)
         } catch (error) {
             console.log("Error Minting Item", error)
         }
