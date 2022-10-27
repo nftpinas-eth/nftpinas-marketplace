@@ -13,8 +13,9 @@ const style = {
   container: `flex flex-row justify-center item-center `,
   subContainer: `grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem]`,
   nftContainer: `overflow-hidden border shadow rounded-xl`,
-  nftTitle: `text-2xl font-semibold`,
-  nftDescription: `text-gray-400`,
+  title: `font-mono font-black text-4xl text-slate-900 `,
+  subTitle: `font-mono font-black text-lg text-slate-900`,
+  description: `font-mono font-semibold text-sm text-slate-700`
 }
 
 export async function getServerSideProps() {
@@ -88,22 +89,22 @@ const mynfts = ({ nfts }) => {
             <div className={style.subContainer}>
               {result.map((nft) => 
               
-                <div key={nft.name} className={style.nftContainer}>
-                  <div className="p-4">
-                    <Image
-                        src={nft.image}
-                        alt="Picture of the author"
-                        width={500}
-                        height={500}
-                    />
-                    <p style={{ height: '64px'}} className={style.nftTitle}>
-                      {nft.name}
-                    </p>
-                    <div style={{ height: '70px', overflow: 'hidden'}}>
-                      <p className={style.nftDescription}>{nft.description}</p>
-                    </div>
+              <div key={nft.name} className={style.nftContainer}>
+                  <Image
+                      src={nft.image}
+                      alt="Picture of the author"
+                      width={500}
+                      height={500}
+                  />
+                <div className="px-4">
+                  <p style={{ height: '32px'}} className={style.subTitle}>
+                    {nft.name}
+                  </p>
+                  <div style={{ height: '50px', overflow: 'hidden'}}>
+                    <p className={style.description}>{nft.description}</p>
                   </div>
                 </div>
+              </div>
               )}
             </div>
           : (
