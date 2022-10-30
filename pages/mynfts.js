@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { marketplaceAddress, mintAddress } from '../config'
 import { Provider } from "zksync-web3";
-
+import axios from 'axios'
 
 const style = {
   container: `flex flex-row justify-center item-center `,
@@ -19,35 +19,31 @@ const style = {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch('')
-  const data = await response.json()
-
-  const provider1 = new Provider("https://zksync2-testnet.zksync.dev");
-  const nftContract =  new ethers.Contract(mintAddress, MintABI.abi, provider1)
-
-  const tokenCount = await nftContract.tokenCount()
+  const { data: res } = await axios.get("")
+  const provider = new Provider("https://zksync2-testnet.zksync.dev");
+  const nftContract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
+  console.log(nftContract)
+  const tokenCount = await nftContract.tokenIds()
   const tokenNumber = tokenCount.toNumber()
 
-  if (data.length !== tokenNumber) {
-    for (let i = data.length; i <= tokenNumber; i++) {
+  if (res.length !== tokenNumber ) {
+    console.log(res.length)
+    console.log(tokenNumber)
+    for (let i = res.length+1; i <= tokenNumber; i++) {
       const ownerToken = await nftContract.ownerOf(i)
       const owner = ownerToken.toLowerCase()
       const uri = await nftContract.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
+      const resp = { address: owner, image: metadata.image, name: metadata.name, description: metadata.description }
 
-      const resp = await fetch('', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ address: owner, image: metadata.image, name: metadata.name, description: metadata.description })})
+      await axios.post("", resp)
     }
   }
 
   return {
     props: {
-      nfts: data,
+      nfts: res,
     }
   }
 }
