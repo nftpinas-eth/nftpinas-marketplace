@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Image from 'next/image'
-import { create as  ipfsClient } from "ipfs-http-client" 
+import { client } from "../lib/infura_client";
 
 // CSS Style
 const style = {
