@@ -22,13 +22,10 @@ export async function getServerSideProps() {
   const { data: res } = await axios.get("")
   const provider = new Provider("https://zksync2-testnet.zksync.dev");
   const nftContract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
-  console.log(nftContract)
   const tokenCount = await nftContract.tokenIds()
   const tokenNumber = tokenCount.toNumber()
 
   if (res.length !== tokenNumber ) {
-    console.log(res.length)
-    console.log(tokenNumber)
     for (let i = res.length+1; i <= tokenNumber; i++) {
       const ownerToken = await nftContract.ownerOf(i)
       const owner = ownerToken.toLowerCase()
