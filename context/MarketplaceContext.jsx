@@ -15,6 +15,7 @@ export const MarketplaceContext = React.createContext()
 
 export const MarketplaceProvider = (({children}) => {
   const [ marketplace, setMarketplace ] = useState({})
+  const [ address, setAddress ] = useState("")
 
 
   // Initialize Contract
@@ -71,6 +72,63 @@ export const MarketplaceProvider = (({children}) => {
     
   }
 
+  const connectWallet = async () => {
+    
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x118' }], 
+        });
+
+        const account = await window.ethereum.request({ 
+          method: 'eth_requestAccounts'
+        });
+        setAddress(account[0])
+        console.log(account[0])
+
+      } catch (error) {
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {   
+                  chainId: '0x118',
+                  chainName: 'zkSync alpha testnet',
+                  rpcUrls: ['https://zksync2-testnet.zksync.dev'],
+                  nativeCurrency: {
+                      name: "zkSync ETH",
+                      symbol: "ETH",
+                      decimals: 18
+                  },
+                  blockExplorerUrls: ["https://explorer.zksync.io/"]
+                },
+              ],
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+      }
+    } else {
+      alert("Please install MetaMask")
+  }
+  
+
+  window.ethereum.on('chainChanged', (chainId) => {
+    window.location.reload();
+  })
+
+  window.ethereum.on('accountsChanged', async function (account) {
+    setAddress(account[0])
+    //setAccountStatus(true)
+    await connectWallet()
+  })
+
+  }
+
   // List Item to the Marketplace
   const listItem = async (_price, _tokenId, _authorId) => {
     if (!_price) return alert("Please put the price")
@@ -107,7 +165,7 @@ export const MarketplaceProvider = (({children}) => {
 }
 
   return (
-    <MarketplaceContext.Provider value={{initializeContract, listItem, mintNFT}}>
+    <MarketplaceContext.Provider value={{initializeContract, listItem, mintNFT, connectWallet, address}}>
       {children}
     </MarketplaceContext.Provider>
   )
