@@ -5,13 +5,14 @@ import nftpinasLogo from "../assets/logo.png";
 import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { HiMenu, HiMenuAlt4 } from "react-icons/hi";
-import { useState, useEffect } from "react";
-import { useWeb3 } from "@3rdweb/hooks";
-import { client } from "../lib/sanity_client";
+import { useState, useEffect , useContext} from "react";
 import { MdOutlineExplore } from "react-icons/md";
 import { BiCollection } from "react-icons/bi";
 import { FiPlusSquare } from "react-icons/fi";
 import { ethers } from 'ethers'
+
+// Marketplace Context Import
+import { MarketplaceContext } from '../context/MarketplaceContext'
 
 
 const style = {
@@ -32,73 +33,12 @@ const style = {
 
 const Header = () => {
   const [ accounts, setAccounts] = useState(""); // Wallet Account
+  const { connectWallet, address } = useContext(MarketplaceContext)
   const [ toggleMenu, setToggleMenu] = React.useState(false); // Toggle Mobile Menu
 
-  const connectMetaMask = async () => {
-    
-    if (window.ethereum) {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x118' }], 
-        });
-
-        const account = await window.ethereum.request({ 
-          method: 'eth_requestAccounts'
-        });
-        setAccounts(account[0])
-
-      } catch (error) {
-        if (error.code === 4902) {
-          try {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [
-                {   
-                  chainId: '0x118',
-                  chainName: 'zkSync alpha testnet',
-                  rpcUrls: ['https://zksync2-testnet.zksync.dev'],
-                  nativeCurrency: {
-                      name: "zkSync ETH",
-                      symbol: "ETH",
-                      decimals: 18
-                  },
-                  blockExplorerUrls: ["https://explorer.zksync.io/"]
-                },
-              ],
-            });
-          } catch (error) {
-            console.log(error);
-          }
-        }
-
-      }
-    } else {
-      alert("Please install MetaMask")
-  }
-  
-
-  window.ethereum.on('chainChanged', (chainId) => {
-    window.location.reload();
-  })
-
-  window.ethereum.on('accountsChanged', async function (account) {
-    setAccounts(account[0])
-    setAccountStatus(true)
-    await connectMetaMask()
-  })
-
-  }
-
   useEffect(() => {
-    const updateAccount = async () => {
-      if (accounts === undefined) {
-        const account = await window.ethereum.request({ method: 'eth_requestAccounts'});
-        setAccounts(account[0])
-      } 
-    }
-    updateAccount()
-  }, []);
+    connectWallet()
+  }, [address]);
 
   return (
     <div className={style.navbarWrapper}>
@@ -148,7 +88,7 @@ const Header = () => {
           </span>
         </div>
         <div className={style.navbarIcon}>
-          {accounts ? <CgProfile /> : <CgProfile />}
+          {address ? <CgProfile /> : <CgProfile />}
         </div>
         <ul className={style.navbarListItems}>
           <Link href="/explore">
@@ -161,21 +101,21 @@ const Header = () => {
             <div className={style.navbarItem}> Mint </div>
           </Link>
           <li className={style.wallet}>
-            {accounts ? (
+            {address ? (
               <button>
                 <p className="">
-                  {accounts[0] +
-                    accounts[1] +
-                    accounts[2] +
-                    accounts[3] +
+                  {address[0] +
+                    address[1] +
+                    address[2] +
+                    address[3] +
                     "..." +
-                    accounts[39] +
-                    accounts[40] +
-                    accounts[41]}
+                    address[39] +
+                    address[40] +
+                    address[41]}
                 </p>
               </button>
             ) : (
-              <button onClick={() => connectMetaMask()}>
+              <button onClick={() => connectWallet()}>
                 Connect Wallet
               </button>
             )}
@@ -213,21 +153,21 @@ const Header = () => {
                 </div>
               </Link>
               <li className={style.wallet}>
-                {accounts ? (
+                {address ? (
                   <button>
                     <p className="">
-                      {accounts[0] +
-                      accounts[1] +
-                      accounts[2] +
-                      accounts[3] +
+                      {address[0] +
+                      address[1] +
+                      address[2] +
+                      address[3] +
                       "..." +
-                      accounts[39] +
-                      accounts[40] +
-                      accounts[41]}
+                      address[39] +
+                      address[40] +
+                      address[41]}
                     </p>
                   </button>
                 ) : (
-                  <button onClick={() => connectMetaMask()}>
+                  <button onClick={() => connectWallet()}>
                     Connect Wallet
                   </button>
                 )}
