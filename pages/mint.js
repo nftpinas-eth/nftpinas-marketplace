@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Image from 'next/image'
 import { client } from "../lib/infura_client";
+
+// Marketplace Context Import
+import { MarketplaceContext } from '../context/MarketplaceContext'
+
 
 // CSS Style
 const style = {
@@ -26,7 +30,8 @@ const style = {
 }
 
 
-const Mint = ({ initializeContract, marketplace }) => {
+const Mint = () => {
+    const { initializeContract, mintNFT } = useContext(MarketplaceContext)
     const [ file, setFile ] = useState('')
     const [ url, setUrl ] = useState([])
     const [ name, setName ] = useState('')
@@ -60,18 +65,7 @@ const Mint = ({ initializeContract, marketplace }) => {
         }
     };
 
-    const mintNFT = async () => {
-        if ( !image || !name || !description ) return alert("Please fill out the missing field.")
 
-        try {
-            const attributes = [{ trait_type, value }]
-            const result = await client.add(JSON.stringify({image, name, description, attributes}))
-            const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
-            const mintItem = await marketplace.mintItem(uri)
-        } catch (error) {
-            console.log("Error Minting Item", error)
-        }
-    }
 
   return (
     <>
@@ -119,7 +113,7 @@ const Mint = ({ initializeContract, marketplace }) => {
                     <span className={style.spanItem}>Value</span>
                 </label>
                 <div className={style.ctaContainer}>
-                    <Button onClick={mintNFT} variant="primary" size="lg">
+                    <Button onClick={() => mintNFT(image, name, description, trait_type, value)} variant="primary" size="lg">
                         <div className={style.accentedButton}>
                             Mint
                         </div>
