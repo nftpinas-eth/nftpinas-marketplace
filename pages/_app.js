@@ -1,15 +1,15 @@
 import '../styles/globals.css'
+import React from 'react'
 import { Contract, ethers } from 'ethers'
 import { useState, useEffect } from 'react'
-import MarketplaceABI from "../contractsABI/Marketplace.json"
 import Header from "../components/Header"
-import { marketplaceAddress } from '../config'
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { MarketplaceProvider } from '../context/MarketplaceContext'
+
 
 function MyApp({ Component, pageProps }) {
-  const [marketplace, setMarketplace] = useState({})
-  const [walletAccount, setWalletAccount] = useState(null)
-  const [walletStatus, setWalletStatus] = useState(false)
-
+  const [queryClient] = React.useState(() => new QueryClient())
 
   useEffect(() => {
     const checkProvider = async () => {
@@ -47,63 +47,14 @@ function MyApp({ Component, pageProps }) {
     }
   }, [])
 
-  // Provider and Signer
-  const initializeWallet = async () => {
-    console.log("handler triggered")
-    if (window.ethereum) {
-      const chainId = await window.ethereum.request({ 
-        "jsonrpc": "2.0",
-        "method": "eth_chainId",
-        "params": [],
-        "id": 0
-      });
-
-      if (chainId === "0x118") {
-        try{
-          console.log(true)
-          const account = await window.ethereum.request({ 
-            method: 'eth_requestAccounts'
-          });
-          console.log(chainId)
-        }catch (error) {
-            console.log(error)
-            console.log('false')
-        }
-
-      }
-    } else {
-        alert("Please install MetaMask")
-    }
-    
-  }
-
-  const initializeContract = async () => {
-    if (window.ethereum) {
-      const chainId = await window.ethereum.request({ 
-        "jsonrpc": "2.0",
-        "method": "eth_chainId",
-        "params": [],
-        "id": 0
-      });
-      if (chainId === "0x118") {
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum)
-          const signer = provider.getSigner()
-          const marketplace =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, signer);
-          setMarketplace(marketplace)
-        } catch (error) {
-          console.log(error)
-        }
-      } else {
-        alert("Connect to zkSync Network")
-      }
-    }
-  }
-
-
 
   return (
-      <Component {...pageProps} initializeWallet={initializeWallet} initializeContract={initializeContract} marketplace={marketplace} />
+    <QueryClientProvider client={queryClient}>
+      <MarketplaceProvider>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </MarketplaceProvider>
+   </QueryClientProvider>
   )
 }
 
