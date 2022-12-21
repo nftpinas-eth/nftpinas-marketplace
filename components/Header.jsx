@@ -32,7 +32,6 @@ const style = {
 };
 
 const Header = () => {
-  const [ accounts, setAccounts] = useState(""); // Wallet Account
   const { connectWallet, address } = useContext(MarketplaceContext)
   const [ toggleMenu, setToggleMenu] = React.useState(false); // Toggle Mobile Menu
 
@@ -104,14 +103,7 @@ const Header = () => {
             {address ? (
               <button>
                 <p className="">
-                  {address[0] +
-                    address[1] +
-                    address[2] +
-                    address[3] +
-                    "..." +
-                    address[39] +
-                    address[40] +
-                    address[41]}
+                  {address.slice(0,4) + "..."  + address.slice(39,42)}
                 </p>
               </button>
             ) : (
@@ -156,14 +148,7 @@ const Header = () => {
                 {address ? (
                   <button>
                     <p className="">
-                      {address[0] +
-                      address[1] +
-                      address[2] +
-                      address[3] +
-                      "..." +
-                      address[39] +
-                      address[40] +
-                      address[41]}
+                      {address.slice(0,4) + "..."  + address.slice(39,42)}
                     </p>
                   </button>
                 ) : (
