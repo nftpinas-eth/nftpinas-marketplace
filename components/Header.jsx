@@ -90,7 +90,7 @@ const Header = () => {
         </div>
         <div className={style.navbarIcon}>
           {address ? 
-          <Link href="/mynfts">
+          <Link href={`/mynfts?address=${address}`}>
               <Image
                 src={irvinProfile}
                 alt="Image Preview"
