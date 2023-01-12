@@ -99,7 +99,7 @@ const AuthorId = () => {
                                             <>
                                             <div className={style.nftSalePrice}><h1 className={style.title}><span className='flex'><FaEthereum />{item.price} ETH</span></h1></div>
                                             <div className={style.nftSaleButton}>
-                                                <Button onClick={()=> buyNFT(item.tokenId, item.price) } variant="primary" size="lg">
+                                                <Button onClick={()=> buyNFT(item.marketId, item.tokenId, item.price) } variant="primary" size="lg">
                                                     <div className={style.accentedButton}><FaShoppingCart className='m-1'/>Buy</div>
                                                 </Button>
                                             </div>

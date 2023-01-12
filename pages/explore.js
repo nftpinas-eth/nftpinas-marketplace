@@ -18,7 +18,21 @@ const style = {
   subContainer: `grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem]`,
 }
 
-const mynfts = () => {
+export async function getServerSideProps() {
+  const { data } = await axios.get('http://api.nftpinas.io/v1/nfts', {
+      params: {
+          isListed: true,
+      },
+  });
+
+  return {
+      props: {
+          data: data,
+      },
+  };
+}
+
+const explore = ({ data }) => {
   const { fetchMarketItems } = useContext(MarketplaceContext)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -30,28 +44,15 @@ const mynfts = () => {
     })()
   }, [])
 
-  const { data, error, isLoading } = useQuery('marketplaceData', () =>
-    axios.get('http://api.nftpinas.io/v1/nfts', {
-      params: {
-        isListed: false,
-      },
-    })
-  )
-
   const clickOnNft = (_address, _tokenId) => {
     router.push(`/asset/${_address}/${_tokenId}`)
   }
-
   
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>
   }
   
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-  
-  const nftData = data ? data.data.data : []
+  const nftData = data ? data.data : []
 
   return (
       <>
@@ -66,4 +67,4 @@ const mynfts = () => {
     )
 }
 
-export default mynfts
+export default explore

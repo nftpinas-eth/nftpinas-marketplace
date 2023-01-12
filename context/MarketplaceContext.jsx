@@ -3,7 +3,6 @@ import { ethers } from 'ethers'
 import Router from 'next/router'
 import { Provider } from "zksync-web3"
 
-
 // Contract Address and ABI Code Import
 import { marketplaceAddress } from '../config'
 import MarketplaceABI from "../contractsABI/Marketplace.json"
@@ -12,10 +11,7 @@ import MarketplaceABI from "../contractsABI/Marketplace.json"
 import { client } from "../lib/infura_client"
 import axios from 'axios'
 
-
-
 export const MarketplaceContext = React.createContext()
-
 export const MarketplaceProvider = (({children}) => {
   const [ marketplace, setMarketplace ] = useState({})
   const [ address, setAddress ] = useState("")
@@ -116,11 +112,10 @@ export const MarketplaceProvider = (({children}) => {
       const listingPrice = ethers.utils.parseUnits(_price.toString(), 'ether')
       await marketplace.listItem(nftId, listingPrice)
 
-      await axios.patch(`http://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`, {
-        isListed: true,
-        price: _price
-      })
-
+      // await axios.patch(`http://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`, {
+      //   isListed: true,
+      //   price: _price
+      // })
 
     } catch (error) {
         console.log(error)
@@ -141,7 +136,7 @@ export const MarketplaceProvider = (({children}) => {
     }
   }
 
-  const buyNFT = async (_itemId, _price) => {
+  const buyNFT = async (_itemId, _tokenId, _price) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const signer = provider.getSigner()
@@ -154,6 +149,16 @@ export const MarketplaceProvider = (({children}) => {
   
       // Wait for the transaction to be mined
       await transaction.wait()
+
+      // Get the owner address of the NFT tokenId
+      const ownerAddress = await contract.ownerOf(_tokenId)
+
+      // Update the owner address in the API
+      await axios.patch(`http://api.nftpinas.io/v1/nfts?tokenId=${_tokenId}`, {
+        owner_address: ownerAddress,
+        isListed: false,
+      })
+      
     } catch (error) {
       console.log(error)
     }
@@ -166,13 +171,15 @@ export const MarketplaceProvider = (({children}) => {
       const data = await contract.fetchMarketItems()
       const items = await Promise.all(
         data.map(
-          async ({itemId, tokenId, seller, owner, price: unformattedPrice}) => {
-            const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether')
+          async ({ itemId, tokenId, seller, owner, price: unformattedPrice}) => {
 
-            const response = await axios.patch(`http://api.nftpinas.io/v1/nfts/${seller}/${tokenId}`, {
+            const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether')
+            const response = await axios.patch(`http://api.nftpinas.io/v1/nfts?tokenId=${tokenId}`, {
               isListed: true,
-              price: price
+              price: price,
+              marketId: itemId.toNumber()
             })
+            console.log(response)
           } 
 
         )
@@ -194,40 +201,36 @@ export const MarketplaceProvider = (({children}) => {
     const contract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
     const tokenCount = await contract.tokenIds()
     const tokenId = tokenCount.toNumber()
+    const fetchResponse = await axios.get("http://localhost:5000/v1/nfts")
+    const fetchResult = fetchResponse.data.result
     //check if there is new items
-    if (lastProcessedId < tokenId) {
-      const promises = []
-      //fetch new item only
-      for (let i = lastProcessedId+1; i <= tokenId; i++) {
-        const owner = await convertString('owner', contract)(i)
-        const uri = await contract.tokenURI(i)
-        promises.push(Promise.all([owner, i, uri, axios.get(uri)]))
-      }
-      const responses = await Promise.all(promises)
-      const postData = responses.map(([owner, i, uri, {data}]) => {
-        return { 
-          owner_address: owner, 
-          tokenId: i,
-          tokenUri: uri,
-          isListed: false,
-          contract_address: contract.address.toLowerCase(),
-          metadata: {
-            image: data.image, 
-            name: data.name, 
-            description: data.description
-          }
+    const promises = []
+    //fetch new item only
+    for (let i = fetchResult+1; i <= tokenId; i++) {
+      const owner = await convertString('owner', contract)(i)
+      const uri = await contract.tokenURI(i)
+      promises.push(Promise.all([owner, i, uri, axios.get(uri)]))
+    }
+    const responses = await Promise.all(promises)
+    const postData = responses.map(([owner, i, uri, {data}]) => {
+      return { 
+        owner_address: owner, 
+        tokenId: i,
+        tokenUri: uri,
+        isListed: false,
+        contract_address: contract.address.toLowerCase(),
+        metadata: {
+          image: data.image, 
+          name: data.name, 
+          description: data.description
         }
-      })
-      
-      // POST the NFT data to the API
-      const postPromises = postData.map((data) => axios.post("http://api.nftpinas.io/v1/nfts/", data))
-      await Promise.all(postPromises)
-      console.log(postPromises)
-      lastProcessedId = tokenId
-     }
+      }
+    })
+    
+    // POST the NFT data to the API
+    const postPromises = postData.map((data) => axios.post("http://api.nftpinas.io/v1/nfts/", data))
+    await Promise.all(postPromises)
   }
-
-
   
   return (
     <MarketplaceContext.Provider value={{initializeContract, listItem, mintNFT, buyNFT, connectWallet, fetchMarketItems, fetchAllNfts, address, marketplaceData, setMarketplaceData}}>
