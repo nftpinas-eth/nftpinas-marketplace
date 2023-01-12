@@ -16,11 +16,6 @@ import { ethers } from 'ethers'
 import { MarketplaceContext } from '../../../../context/MarketplaceContext'
 import { list } from 'postcss'
 
-const fetchData = async (_authorId, _tokenId) => {
-    const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`)
-    return data
-}
-
 const style = {
     container: `flex flex-col justify-center items-center shrink-0 grow-0 mx-[2rem] md:max-w-5xl h-screen md:m-auto`,
     subContainer: `flex flex-col md:flex-row my-[2rem] w-full h-full text-white`,
@@ -41,13 +36,19 @@ const style = {
     spanItem: `font-mono font-semibold text-sm text-slate-700 bg-white absolute left-1 -top-3 mx-2 px-1 py-0 `,
 }
 
+const fetchData = async (_authorId, _tokenId) => {
+    const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`)
+    return data
+}
+
+
 const AuthorId = () => {
     const router = useRouter()
     const { authorId, tokenId } = router.query
     const [ showModal, setShowModal ] = useState(false)
     const [ price, setPrice ] = useState(0)
     //const [ marketplace, setMarketplace ] = useState({})
-    const { initializeContract, listItem, marketplace } = useContext(MarketplaceContext)
+    const { initializeContract, listItem, buyNFT, marketplace } = useContext(MarketplaceContext)
 
     const _authorId = typeof router.query?.authorId === "string" ? router.query.authorId : "";
     const _tokenId = typeof router.query?.tokenId === "string" ? router.query.tokenId : "";
@@ -59,6 +60,7 @@ const AuthorId = () => {
     useEffect(() => {
         initializeContract()
     }, []);
+    
 
     if (isLoading) {
         return <div className="center">Loading...</div>;
@@ -68,7 +70,6 @@ const AuthorId = () => {
 
     return (
         <>
-        <Header />
             {data.data.map((item) =>{
                 return (
                     <div className={style.container}>
@@ -94,7 +95,17 @@ const AuthorId = () => {
                                 <h1 className={style.title}>{item.metadata.name} #{item.tokenId}</h1>
                                 <p className={style.description}>{item.metadata.description}</p>
                                 <div className={style.nftSaleWrapper}>
-                                        { item.isListed === false ? (
+                                        { item.isListed === true ? (
+                                            <>
+                                            <div className={style.nftSalePrice}><h1 className={style.title}><span className='flex'><FaEthereum />{item.price} ETH</span></h1></div>
+                                            <div className={style.nftSaleButton}>
+                                                <Button onClick={()=> buyNFT(item.tokenId, item.price) } variant="primary" size="lg">
+                                                    <div className={style.accentedButton}><FaShoppingCart className='m-1'/>Buy</div>
+                                                </Button>
+                                            </div>
+                                            </>
+                                            
+                                        ) : (
                                             <>
                                             <div className={style.nftSalePrice}>
                                                 <h1 className={style.title}>
@@ -110,14 +121,6 @@ const AuthorId = () => {
                                                     <div className={style.accentedButton}><FaShoppingCart className='m-1'/>List</div>
                                                 </Button>
                                             </div>
-                                            
-                                            </>
-                                        ) : (
-                                            <>
-                                            <div className={style.nftSalePrice}><h1 className={style.title}><span className='flex'><FaEthereum />0.0010000 ETH</span></h1></div>
-                                            <div className={style.nftSaleButton}>
-
-                                            </div>
                                             </>
                                         )}
                                 </div>
@@ -126,7 +129,6 @@ const AuthorId = () => {
                     </div>
                 )
             })}
-        <Footer />
         </>
     )
 }
