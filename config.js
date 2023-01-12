@@ -1,2 +1,1 @@
-export const marketplaceAddress = "";
-export const mintAddress = "";
+export const marketplaceAddress = "0xd0AF3FbfBFa3dD828A74C3C1DfA7bEB5e0d32867";
