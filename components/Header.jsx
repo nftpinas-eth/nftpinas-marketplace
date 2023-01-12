@@ -1,15 +1,17 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import nftpinasLogo from "../assets/logo.png";
-import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { HiMenu, HiMenuAlt4 } from "react-icons/hi";
-import { useState, useEffect , useContext} from "react";
-import { MdOutlineExplore } from "react-icons/md";
-import { BiCollection } from "react-icons/bi";
-import { FiPlusSquare } from "react-icons/fi";
+import React from "react"
+import Image from "next/image"
+import Link from "next/link"
+import nftpinasLogo from "../assets/logo.png"
+import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai"
+import { CgProfile } from "react-icons/cg"
+import { HiMenu, HiMenuAlt4 } from "react-icons/hi"
+import { useState, useEffect , useContext} from "react"
+import { MdOutlineExplore } from "react-icons/md"
+import { BiCollection } from "react-icons/bi"
+import { FiPlusSquare } from "react-icons/fi"
 import { ethers } from 'ethers'
+import irvinProfile from "../assets/irvin.jpg"
+
 
 // Marketplace Context Import
 import { MarketplaceContext } from '../context/MarketplaceContext'
@@ -29,15 +31,15 @@ const style = {
   navbarListItems: `md:flex text-black hidden list-none flex-row justify-between items-center flex-initial`,
   wallet: `text-white font-sans font-semibold bg-black py-[0.3rem] px-[0.9rem] rounded-full cursor-pointer hover:bg-black`,
   navbarMenuListItems: `z-10 fixed absolute top-[3.4rem] right-[0.9rem] w-[12rem] h-[45vw] p-3 md:hidden list-none flex flex-col justify-start items-start rounded-md shadow-[0_4px_10px_2px_rgba(0,0,0,0.3)] bg-white border-solid animated-slide-in`,
-};
+}
 
 const Header = () => {
   const { connectWallet, address } = useContext(MarketplaceContext)
-  const [ toggleMenu, setToggleMenu] = React.useState(false); // Toggle Mobile Menu
+  const [ toggleMenu, setToggleMenu] = React.useState(false) // Toggle Mobile Menu
 
   useEffect(() => {
     connectWallet()
-  }, [address]);
+  }, [address])
 
   return (
     <div className={style.navbarWrapper}>
@@ -66,7 +68,7 @@ const Header = () => {
 
       <Link href="/">
         <div className={style.logoContainer}>
-          <Image src={nftpinasLogo} height={50} width={50} />
+          <Image src={nftpinasLogo} alt="Image Preview" height={50} width={50} />
           <div className={style.logoText}>NFTPinas</div>
         </div>
       </Link>
@@ -87,14 +89,23 @@ const Header = () => {
           </span>
         </div>
         <div className={style.navbarIcon}>
-          {address ? <CgProfile /> : <CgProfile />}
+          {address ? 
+          <Link href="/mynfts">
+              <Image
+                src={irvinProfile}
+                alt="Image Preview"
+                className="rounded-full"
+                height={50}
+                width={50}
+              />
+          </Link>
+          : 
+          
+          <CgProfile />}
         </div>
         <ul className={style.navbarListItems}>
           <Link href="/explore">
             <div className={style.navbarItem}> Explore </div>
-          </Link>
-          <Link href="/mynfts">
-            <div className={style.navbarItem}> My NFTs </div>
           </Link>
           <Link href="/mint">
             <div className={style.navbarItem}> Mint </div>
@@ -132,11 +143,6 @@ const Header = () => {
               <Link href="/explore">
                 <div className={style.navbarItem}>
                   <MdOutlineExplore className="m-1 w-7 h-7" /> Explore{" "}
-                </div>
-              </Link>
-              <Link href="/mynfts">
-                <div className={style.navbarItem}>
-                  <BiCollection className="m-1 w-7 h-7" /> Collection{" "}
                 </div>
               </Link>
               <Link href="/mintNFT">
