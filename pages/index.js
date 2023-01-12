@@ -10,10 +10,8 @@ import { useEffect } from 'react'
 const Home = () => {
   return (
     <>
-    <Header />
     <Hero />
     <About />
-    <Footer/>
     </>
   )
 }
