@@ -3,6 +3,7 @@ import React from 'react'
 import { Contract, ethers } from 'ethers'
 import { useState, useEffect } from 'react'
 import Header from "../components/Header"
+import Footer from "../components/Footer"
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { MarketplaceProvider } from '../context/MarketplaceContext'
@@ -51,7 +52,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
       <MarketplaceProvider>
+        <Header />
         <Component {...pageProps} />
+        <Footer />
         <ReactQueryDevtools initialIsOpen={false} />
       </MarketplaceProvider>
    </QueryClientProvider>
