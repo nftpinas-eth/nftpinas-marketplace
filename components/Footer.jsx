@@ -23,7 +23,7 @@ const Footer = () => {
     <div className={style.sectionWrapper}>
       <div className={style.sectionContainer}>
         <div className={style.logoContainer}>
-          <Image src={nftpinasLogo} height={50} width={50} />
+          <Image src={nftpinasLogo} alt="Image Preview" height={50} width={50} />
           <div className={style.logoText}>NFTPinas</div>
         </div>
         <div className={style.copyrightContainer}>
