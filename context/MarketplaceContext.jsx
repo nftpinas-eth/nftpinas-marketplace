@@ -201,7 +201,7 @@ export const MarketplaceProvider = (({children}) => {
     const contract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
     const tokenCount = await contract.tokenIds()
     const tokenId = tokenCount.toNumber()
-    const fetchResponse = await axios.get("http://localhost:5000/v1/nfts")
+    const fetchResponse = await axios.get("http://api.nftpinas.io/v1/nfts/")
     const fetchResult = fetchResponse.data.result
     //check if there is new items
     const promises = []
