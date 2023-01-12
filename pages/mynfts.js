@@ -1,13 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react'
 import MarketplaceABI from "../contractsABI/Marketplace.json"
-import MintABI from "../contractsABI/Mint.json"
+//import MintABI from "../contractsABI/Mint.json"
 import { ethers } from "ethers"
 import Image from 'next/image'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { marketplaceAddress, mintAddress } from '../config'
-import { Provider } from "zksync-web3";
+import { Provider } from "zksync-web3"
 import axios from 'axios'
+import { MarketplaceContext } from '../context/MarketplaceContext'
+import { useQuery } from 'react-query'
+import NftCard from '../components/NFTCard/nftcard'
+import { useRouter } from 'next/router'
+
+
+
+
+
 
 const style = {
   container: `flex flex-row justify-center item-center `,
@@ -18,95 +27,47 @@ const style = {
   description: `font-mono font-semibold text-sm text-slate-700`
 }
 
-export async function getServerSideProps() {
-  const { data: res } = await axios.get("")
-  const provider = new Provider("https://zksync2-testnet.zksync.dev");
-  const nftContract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
-  const tokenCount = await nftContract.tokenIds()
-  const tokenNumber = tokenCount.toNumber()
 
-  if (res.length !== tokenNumber ) {
-    for (let i = res.length+1; i <= tokenNumber; i++) {
-      const ownerToken = await nftContract.ownerOf(i)
-      const owner = ownerToken.toLowerCase()
-      const uri = await nftContract.tokenURI(i)
-      const response = await fetch(uri)
-      const metadata = await response.json()
-      const resp = { address: owner, image: metadata.image, name: metadata.name, description: metadata.description }
-
-      await axios.post("", resp)
-    }
-  }
-
-  return {
-    props: {
-      nfts: res,
-    }
-  }
+const fetchData = async (address) => {
+  const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${address}`)
+  return data
 }
 
-const mynfts = ({ nfts }) => {
-   const [address, setAddress] = useState("")
+const mynfts = () => {
+  const { fetchAllNfts, connectWallet, address } = useContext(MarketplaceContext)
+  //const [address, setAddress] = useState("")
+  const router = useRouter()
 
-    useEffect (()=>{
+
+    useEffect ( ()=>{
       connectWallet()
+      fetchAllNfts()
 
     }, [])
 
-    const connectWallet = async () => {
-      if (window.ethereum) {
-          try {
-              const accounts = await window.ethereum.request({ method: 'eth_requestAccounts'});
-              setAddress(accounts[0])
-            } catch (error) {
-              console.log("Error", error)
-          }
- 
-      } else {
-          alert("Please install MetaMask")
-      }
-
+    const { data, isLoading, isFetching } = useQuery(["getNft", address], () => fetchData(address), {
+        enabled: true
+    })
+    
+    const clickOnNft = (_address, _tokenId) => {
+      router.push(`/asset/${_address}/${_tokenId}`)
+    }
+    
+    if (isLoading) {
+      return <div className="center">Loading...</div>
     }
 
-    const result =  nfts.filter((nft) => {
-      if (nft.address === address ) {
-        return(nft)
-      }
-    })
+    if (!data) return <div>No Data Found</div>
 
     return (
       <>
-      <Header />
         <div className={style.container}>
-          {result.length > 0 ?
             <div className={style.subContainer}>
-              {result.map((nft) => 
-              
-              <div key={nft.name} className={style.nftContainer}>
-                  <Image
-                      src={nft.image}
-                      alt="Picture of the author"
-                      width={500}
-                      height={500}
-                  />
-                <div className="px-4">
-                  <p style={{ height: '32px'}} className={style.subTitle}>
-                    {nft.name}
-                  </p>
-                  <div style={{ height: '50px', overflow: 'hidden'}}>
-                    <p className={style.description}>{nft.description}</p>
-                  </div>
-                </div>
-              </div>
+              {data.data.map((nft) => 
+              <NftCard key={nft.tokenId} image={nft.metadata.image} name={nft.metadata.name} onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)} />
               )}
             </div>
-          : (
-            <main style={{ padding: "1rem 0" }}>
-              <h2>No listed assets</h2>
-            </main>
-          )}
         </div>
-      <Footer />
       </>
     )
 }
