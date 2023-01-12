@@ -65,11 +65,21 @@ const Mint = () => {
         }
     };
 
+    // const mintNFT = async () => {
+    //     if ( !image || !name || !description ) return alert("Please fill out the missing field.")
 
+    //     try {
+    //         const attributes = [{ trait_type, value }]
+    //         const result = await client.add(JSON.stringify({image, name, description, attributes}))
+    //         const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
+    //         const mintItem = await marketplace.mintItem(uri)
+    //     } catch (error) {
+    //         console.log("Error Minting Item", error)
+    //     }
+    // }
 
   return (
     <>
-    <Header />
      <div className={style.mainContainer}>
         <div className={style.mainSubContainer}>
             <h1 className={style.title}>Mint NFT</h1>
@@ -122,7 +132,6 @@ const Mint = () => {
             </div>
         </div>
      </div>
-    <Footer />
     </>
   )
 }
