@@ -33,7 +33,17 @@ const fetchData = async (address) => {
   return data
 }
 
-const mynfts = () => {
+export async function getServerSideProps(context) {
+  const { address } = context.query
+  const data = await fetchData(address)
+  return {
+    props: {
+      data
+    }
+  }
+}
+
+const mynfts = ({ data }) => {
   const { fetchAllNfts, connectWallet, address } = useContext(MarketplaceContext)
   //const [address, setAddress] = useState("")
   const router = useRouter()
@@ -45,10 +55,13 @@ const mynfts = () => {
 
     }, [])
 
-    const { data, isLoading, isFetching } = useQuery(["getNft", address], () => fetchData(address), {
-        enabled: true
+
+    const { isLoading, isFetching, refetch } = useQuery(["getNft", address], () => fetchData(address), {
+        enabled: true,
+        initialData: data
     })
-    
+
+
     const clickOnNft = (_address, _tokenId) => {
       router.push(`/asset/${_address}/${_tokenId}`)
     }
