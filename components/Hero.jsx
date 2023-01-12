@@ -48,6 +48,7 @@ const Hero = () => {
             <div className={style.infoContainer}>
               <Image
                 src={irvinProfile}
+                alt="Image Preview"
                 className="rounded-full"
                 height={50}
                 width={50}
