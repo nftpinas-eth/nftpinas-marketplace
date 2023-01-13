@@ -23,7 +23,7 @@ const style = {
 }
 
 const fetchData = async (address) => {
-  const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${address}`)
+  const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${address}`)
   return data
 }
 
@@ -39,9 +39,7 @@ export async function getServerSideProps(context) {
 
 const mynfts = ({ data }) => {
   const { fetchAllNfts, connectWallet, address } = useContext(MarketplaceContext)
-  //const [address, setAddress] = useState("")
   const router = useRouter()
-
 
     useEffect ( ()=>{
       connectWallet()
@@ -49,12 +47,10 @@ const mynfts = ({ data }) => {
 
     }, [])
 
-
     const { isLoading, isFetching, refetch } = useQuery(["getNft", address], () => fetchData(address), {
         enabled: true,
         initialData: data
     })
-
 
     const clickOnNft = (_address, _tokenId) => {
       router.push(`/asset/${_address}/${_tokenId}`)

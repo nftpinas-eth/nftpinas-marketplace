@@ -154,7 +154,7 @@ export const MarketplaceProvider = (({children}) => {
       const ownerAddress = await contract.ownerOf(_tokenId)
 
       // Update the owner address in the API
-      await axios.patch(`http://api.nftpinas.io/v1/nfts?tokenId=${_tokenId}`, {
+      await axios.patch(`https://api.nftpinas.io/v1/nfts?tokenId=${_tokenId}`, {
         owner_address: ownerAddress,
         isListed: false,
       })
@@ -174,7 +174,7 @@ export const MarketplaceProvider = (({children}) => {
           async ({ itemId, tokenId, seller, owner, price: unformattedPrice}) => {
 
             const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether')
-            const response = await axios.patch(`http://api.nftpinas.io/v1/nfts?tokenId=${tokenId}`, {
+            const response = await axios.patch(`https://api.nftpinas.io/v1/nfts?tokenId=${tokenId}`, {
               isListed: true,
               price: price,
               marketId: itemId.toNumber()
@@ -201,7 +201,7 @@ export const MarketplaceProvider = (({children}) => {
     const contract =  new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, provider)
     const tokenCount = await contract.tokenIds()
     const tokenId = tokenCount.toNumber()
-    const fetchResponse = await axios.get("http://api.nftpinas.io/v1/nfts/")
+    const fetchResponse = await axios.get("https://api.nftpinas.io/v1/nfts/")
     const fetchResult = fetchResponse.data.result
     //check if there is new items
     const promises = []
@@ -228,7 +228,7 @@ export const MarketplaceProvider = (({children}) => {
     })
     
     // POST the NFT data to the API
-    const postPromises = postData.map((data) => axios.post("http://api.nftpinas.io/v1/nfts/", data))
+    const postPromises = postData.map((data) => axios.post("https://api.nftpinas.io/v1/nfts/", data))
     await Promise.all(postPromises)
   }
   

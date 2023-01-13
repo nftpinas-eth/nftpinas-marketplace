@@ -37,7 +37,7 @@ const style = {
 }
 
 const fetchData = async (_authorId, _tokenId) => {
-    const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`)
+    const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`)
     return data
 }
 

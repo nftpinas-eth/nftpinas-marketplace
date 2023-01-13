@@ -19,7 +19,7 @@ const style = {
 }
 
 export async function getServerSideProps() {
-  const { data } = await axios.get('http://api.nftpinas.io/v1/nfts', {
+  const { data } = await axios.get('https://api.nftpinas.io/v1/nfts', {
       params: {
           isListed: true,
       },

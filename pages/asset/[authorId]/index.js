@@ -8,7 +8,7 @@ import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
 const fetchData = async (id) => {
-    const { data } = await axios.get(`http://api.nftpinas.io/v1/nfts/${id}`)
+    const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${id}`)
     return data
 }
 
