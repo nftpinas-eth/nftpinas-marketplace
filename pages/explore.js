@@ -56,6 +56,7 @@ const explore = ({ data }) => {
 
   return (
       <>
+      {nftData.length ? (
         <div className={style.container}>
             <div className={style.subContainer}>
               {nftData.map((nft) => 
@@ -63,6 +64,9 @@ const explore = ({ data }) => {
               )}
             </div>
         </div>
+        ) : (
+          <p>No Listed NFTs found</p>
+        )}
       </>
     )
 }
