@@ -155,7 +155,7 @@ export const MarketplaceProvider = (({children}) => {
 
       // Update the owner address in the API
       await axios.patch(`https://api.nftpinas.io/v1/nfts?tokenId=${_tokenId}`, {
-        owner_address: ownerAddress,
+        owner_address: ownerAddress.toLowerCase(),
         isListed: false,
       })
       
