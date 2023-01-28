@@ -11,6 +11,8 @@ import { FaEthereum, FaShoppingCart } from "react-icons/fa"
 import { marketplaceAddress } from '../../../../config'
 import MarketplaceABI from "../../../../contractsABI/Marketplace.json"
 import { ethers } from 'ethers'
+import LoadingPage from '../components/Loading/loading'
+
 
 // Marketplace Context Import
 import { MarketplaceContext } from '../../../../context/MarketplaceContext'
@@ -47,9 +49,7 @@ const AuthorId = () => {
     const { authorId, tokenId } = router.query
     const [ showModal, setShowModal ] = useState(false)
     const [ price, setPrice ] = useState(0)
-    //const [ marketplace, setMarketplace ] = useState({})
     const { initializeContract, listItem, buyNFT, marketplace } = useContext(MarketplaceContext)
-
     const _authorId = typeof router.query?.authorId === "string" ? router.query.authorId : "";
     const _tokenId = typeof router.query?.tokenId === "string" ? router.query.tokenId : "";
 
@@ -63,7 +63,7 @@ const AuthorId = () => {
     
 
     if (isLoading) {
-        return <div className="center">Loading...</div>;
+        return <LoadingPage />
     }
 
     if (!data) return <div>No Data Found</div>

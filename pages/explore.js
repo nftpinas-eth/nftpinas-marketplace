@@ -10,6 +10,7 @@ import axios from 'axios'
 import { MarketplaceContext } from '../context/MarketplaceContext'
 import { useQuery } from 'react-query'
 import NftCard from '../components/NFTCard/nftcard'
+import LoadingPage from '../components/Loading/loading'
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 
@@ -49,7 +50,7 @@ const explore = ({ data }) => {
   }
   
   if (loading) {
-    return <p>Loading...</p>
+    return <LoadingPage />
   }
   
   const nftData = data ? data.data : []
@@ -60,7 +61,17 @@ const explore = ({ data }) => {
         <div className={style.container}>
             <div className={style.subContainer}>
               {nftData.map((nft) => 
-                <NftCard key={nft.tokenId} image={nft.metadata.image} name={nft.metadata.name} price={nft.price} onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)} />
+                //<NftCard key={nft.tokenId} image={nft.metadata.image} name={nft.metadata.name} price={nft.price} onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)} />
+                <NftCard 
+                key={nft.tokenId}
+                src={nft.metadata.image}
+                alt="NFT Image Preview"
+                title={nft.metadata.name}
+                description={nft.metadata.description}
+                price={nft.price}
+                creator={nft.owner_address.slice(0,4) + "..."  + nft.owner_address.slice(39,42)}
+                onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)}
+              />
               )}
             </div>
         </div>
