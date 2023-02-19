@@ -15,8 +15,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router';
 
 const style = {
-  container: `flex flex-row justify-center item-center `,
-  subContainer: `grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem]`,
+  container: ` `,
+  subContainer: ``,
 }
 
 export async function getServerSideProps() {
@@ -58,8 +58,8 @@ const explore = ({ data }) => {
   return (
       <>
       {nftData.length ? (
-        <div className={style.container}>
-            <div className={style.subContainer}>
+        <div className="bg-[#1F1D1B] w-full h-screen flex flex-row min-w-[360px] ">
+            <div className="max-w-[1280px] w-full grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem] mx-auto">
               {nftData.map((nft) => 
                 //<NftCard key={nft.tokenId} image={nft.metadata.image} name={nft.metadata.name} price={nft.price} onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)} />
                 <NftCard 
@@ -69,7 +69,10 @@ const explore = ({ data }) => {
                 title={nft.metadata.name}
                 description={nft.metadata.description}
                 price={nft.price}
-                creator={nft.owner_address.slice(0,4) + "..."  + nft.owner_address.slice(39,42)}
+                isListed={true}
+                tokenId={nft.tokenId}
+                marketId={nft.marketId}
+                creator={nft.owner_address}
                 onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)}
               />
               )}
