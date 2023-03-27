@@ -4,7 +4,7 @@ const Input = ({value, label, size, onChange}) => {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <div className="relative m-[4px]">
+    <div className={`relative ${size ? `w-[${size}px]` : "w-full"} m-[4px]`}>
       <input
         type="text"
         value={value}
@@ -14,7 +14,7 @@ const Input = ({value, label, size, onChange}) => {
         onBlur={() => {
             if(value === "") setIsFocused(false)
         }}
-        className={`h-10 p-3 text-[#DD9F00] bg-transparent border-2 rounded-lg outline-none w-[${size}px] border-[#DD9F00]`}
+        className={`h-10 p-3 text-[#DD9F00] bg-transparent border-2 rounded-lg outline-none w-full min-w-[0] border-[#DD9F00]`}
       />
       <label
         htmlFor="label"
@@ -25,6 +25,7 @@ const Input = ({value, label, size, onChange}) => {
     </div>
   )
 }
+
 
 export default Input
 
