@@ -1,21 +1,11 @@
 import React from "react";
-import { BsFillShieldFill } from "react-icons/bs";
-
-const style = {
-  sectionWrapper: `flex justify-center items-center h-[600px] w-[100%] bg-zinc-100 md:px-[20%]`,
-  sectionContainer: `flex flex-col justify-center items-center mx-[5.5rem] mt-20`,
-  aboutInfoWrapper: "",
-  aboutTitle: "relative text-black text-[36px] font-semibold",
-  aboutDescription:
-    "text-[#8a939b] text-1xl mt-[0.8rem] mb-[2.5rem] md:w-[500px] ",
-};
 
 const About = () => {
   return (
-    <div className={style.sectionWrapper}>
-      <div className={style.sectionContainer}>
-        <div className={style.aboutTitle}>About Us</div>
-        <div className={style.aboutDescription}>
+    <div className="flex w-full items-center justify-center h-[600px] min-w-[360px] bg-[#1F1D1B] md:px-[20%]">
+      <div className="flex flex-col justify-center items-center mx-[5.5rem] mt-20">
+        <div className="relative text-[#FFFF] text-[36px] font-mono">About Us</div>
+        <div className="text-[#FFFF] font-mono text-1xl mt-[0.8rem] mb-[2.5rem] md:w-[500px]">
           <h1>
             NFTPinas is an NFT marketplace place built on zkSync focused on
             bootstrapping Filipino NFT/Metaverse artists/projects. Soon to
