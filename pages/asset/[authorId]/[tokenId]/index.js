@@ -11,7 +11,7 @@ import { FaEthereum, FaShoppingCart } from "react-icons/fa"
 import { marketplaceAddress } from '../../../../config'
 import MarketplaceABI from "../../../../contractsABI/Marketplace.json"
 import { ethers } from 'ethers'
-import LoadingPage from '../components/Loading/loading'
+import LoadingPage from '../../../../components/Loading/loading'
 
 
 // Marketplace Context Import

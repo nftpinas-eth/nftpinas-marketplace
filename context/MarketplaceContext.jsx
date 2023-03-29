@@ -123,12 +123,17 @@ export const MarketplaceProvider = (({children}) => {
   }
 
   // Mint Item from the Marketplace
-  const mintNFT = async (image, name, description, trait_type, value) => {
+  const mintNFT = async (image, name, description, traitTypeInputs) => {
     if ( !image || !name || !description ) return alert("Please fill out the missing field.")
+    console.log(traitTypeInputs)
+
+    if (traitTypeInputs.some(input => !input.trait_type || !input.value)) {
+      return alert("Please fill out the missing field for trait and value.");
+    }
 
     try {
-        const attributes = [{ trait_type, value }]
-        const result = await client.add(JSON.stringify({image, name, description, attributes}))
+        const result = await client.add(JSON.stringify({image, name, description, attributes: traitTypeInputs}))
+        console.log(result)
         const uri = `https://nftpinas.infura-ipfs.io/ipfs/${result.path}`
         const mintItem = await marketplace.mintItem(uri)
     } catch (error) {
@@ -179,7 +184,6 @@ export const MarketplaceProvider = (({children}) => {
               price: price,
               marketId: itemId.toNumber()
             })
-            console.log(response)
           } 
 
         )
