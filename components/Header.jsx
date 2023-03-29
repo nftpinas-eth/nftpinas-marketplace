@@ -35,7 +35,6 @@ const HeaderNew = () => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [ toggleMenu, setToggleMenu] = React.useState(false) // Toggle Mobile Menu
 
-
     function handleClick(index) {
         if (index === 0) {
             setActiveIndex(index)
