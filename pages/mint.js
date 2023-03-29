@@ -68,8 +68,8 @@ const Mint = () => {
     }
 
   return (
-     <div className="bg-[#1F1D1B] h-screen w-full flex">
-        <div className="max-w-[1280px] mx-auto px-[1rem]">
+     <div className="bg-[#1F1D1B] w-full flex">
+        <div className="flex-row mx-auto">
             <h1 className="font-mono text-white text-4xl">Mint NFT</h1>
             <p className="font-mono text-white font-semibold text-sm text-slate-300">Create and Mint your NFT on Layer 2.</p>
             <h2 className="font-mono text-white text-lg mt-[2rem]"> Upload Media *</h2>

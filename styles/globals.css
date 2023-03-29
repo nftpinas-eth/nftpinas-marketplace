@@ -1,11 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-input[type="text"]:focus ~ .input-text,
-input[type="text"]:not(:placeholder-shown) ~ .input-text{
-  @apply transform -translate-y-4 -translate-x-1 bg-white scale-75;
+input:focus + label{
+  transition: transform 0.5s;
 }
 
 * {
@@ -15,5 +14,27 @@ input[type="text"]:not(:placeholder-shown) ~ .input-text{
   }
 
 html, body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  @apply font-sans;
+}
+
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1s infinite;
+}
+
+.grid-rows-layout {
+  grid-template-rows: auto 1fr auto;
 }

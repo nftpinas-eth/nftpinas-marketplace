@@ -58,8 +58,8 @@ const explore = ({ data }) => {
   return (
       <>
       {nftData.length ? (
-        <div className="bg-[#1F1D1B] w-full h-screen flex flex-row min-w-[360px] ">
-            <div className="max-w-[1280px] w-full grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem] mx-auto">
+        <div className="bg-[#1F1D1B] w-full flex flex-row">
+            <div className="w-full grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem] mx-auto">
               {nftData.map((nft) => 
                 //<NftCard key={nft.tokenId} image={nft.metadata.image} name={nft.metadata.name} price={nft.price} onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)} />
                 <NftCard 
