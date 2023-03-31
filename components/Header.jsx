@@ -49,8 +49,8 @@ const HeaderNew = () => {
     }
 
   return (
-    <div className="bg-[#1E2328] h-[50px] w-full flex items-center drop-shadow-xl min-w-[360px]">
-        <div className="max-w-[1280px] w-full flex justify-between items-center px-[2rem] mx-auto  ">
+    <div className="bg-[#1E2328] h-[50px] w-full flex items-center drop-shadow-xl">
+        <div className="container w-full flex justify-between items-center px-[2rem] mx-auto  ">
             <div onClick={() => handleClick(null)} className="flex items-center mx-[4px] cursor-pointer">
                 <Image src={nftpinas_logo} alt="NFTPinas_Logo" height={40} width={40} />
                 <h1 className="text-[#FFFFFF] font-mono text-base mx-[4px] max-md:hidden sm:text-xl lg:text-2xl">NFTPINAS</h1>
@@ -127,7 +127,7 @@ const HeaderNew = () => {
                     <CgProfile className="m-[4px] w-7 h-7" /> Profile
                     </li>
                     ) : (
-                    <Button height={40} width={80} shape="square" label="Connect1" onClick={() => connectWallet()} />
+                    <Button height={40} width={80} shape="square" label="Connect" onClick={() => connectWallet()} />
                     )}
                 </li>
             </ul>
