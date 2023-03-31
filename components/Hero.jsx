@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="flex items-start flex-col md:mx-10 mx-10 my-[3rem]">
           <div className="font-mono text-[#FFFFFF] text-4xl">Support Filipino #NFT Projects</div>
           <div className="font-mono text-[#FFFFFF] text-sm mt-[0.8rem] mb-[2.5rem]">
-            NFTPinas offers fast, cheap, and secured transactions in zkSync.
+            NFTPinas offers fast, cheap, and secured transactions in zkSync Era.
           </div>
           <Button height={40} width={270} shape="square" label="Learn More"/>
         </div>
@@ -49,7 +49,7 @@ const Hero = () => {
           </p>
           <p className="flex flex-col items-center w-full font-semibold font-mono md:flex-row">
             <BsGlobe className="w-8 h-8 mx-4" />
-            Built-in zkSync
+            Built-in zkSync Era
           </p>
           <p className="flex flex-col items-center w-full font-semibold font-mono md:flex-row">
             <GrTransaction className="w-8 h-8 mx-4" />

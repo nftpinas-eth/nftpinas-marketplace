@@ -7,7 +7,7 @@ const About = () => {
         <div className="relative text-[#FFFF] text-[36px] font-mono">About Us</div>
         <div className="text-[#FFFF] font-mono text-1xl mt-[0.8rem] mb-[2.5rem] md:w-[500px]">
           <h1>
-            NFTPinas is an NFT marketplace place built on zkSync focused on
+            NFTPinas is an NFT marketplace place built on zkSync Era focused on
             bootstrapping Filipino NFT/Metaverse artists/projects. Soon to
             expand in SEA + globally.
           </h1>
