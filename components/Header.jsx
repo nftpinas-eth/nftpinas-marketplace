@@ -75,7 +75,7 @@ const HeaderNew = () => {
                 </div>
 
                 {address ? 
-                    <Link href={`/mynfts?address=${address}`}>
+                    <Link href={`/asset/${address}`}>
                         <Image
                             src={irvin_wagmi}
                             alt="Image Preview"
@@ -132,7 +132,7 @@ const HeaderNew = () => {
                 </li>
             </ul>
           )}
-            <ul className="flex justify-between max-md:hidden">
+            <ul className="hidden md:flex justify-between">
                 <li
                     className={`px-2 py-1 cursor-pointer mx-[6px] ${activeIndex === 0 ? 'font-mono font-semibold text-[#DD9F00] border-b-2 border-[#DD9F00]' : 'text-[#FFFFFF]'}`}
                     onClick={() => handleClick(0)}

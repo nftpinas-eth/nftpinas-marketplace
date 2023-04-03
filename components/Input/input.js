@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 
-const Input = ({value, label, size, onChange}) => {
+const Input = ({ value, label, size, type = 'text', onChange }) => {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
     <div className={`relative ${size ? `w-[${size}px]` : "w-full"} m-[4px]`}>
       <input
-        type="text"
+        type={type}
         value={value}
         id="label"
         onChange={onChange}
@@ -25,6 +25,7 @@ const Input = ({value, label, size, onChange}) => {
     </div>
   )
 }
+
 
 
 export default Input

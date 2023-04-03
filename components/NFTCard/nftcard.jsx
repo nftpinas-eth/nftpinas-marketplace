@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 const NftCard = ({ src, alt, title, description, price, isListed, marketId, tokenId, creator, onClick }) => {
   const router = useRouter()
   const goToAuthorPage = (address) => {
-    router.push(`/mynfts?address=${address}`)
+    router.push(`/asset/${address}`)
   }
   
   return (

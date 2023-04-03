@@ -3,11 +3,31 @@ import { Button } from 'react-bootstrap'
 
 const ButtonComponents = ({ label, shape, size, height, width, onClick }) => {
     let className = "flex items-center justify-center font-mono font-semibold text-[#1F1D1B] cursor-pointer bg-[#DD9F00] hover:bg-[#DD9F00]/80 m-[2px]"
-    if (shape === "square") className += ` w-[${width}px] h-[${height}px] rounded-lg`
-    if (shape === "round") className += ` w-[${size}px] h-[${size}px] rounded-full`
+    let buttonProps = {
+      variant: 'warning',
+      onClick: onClick
+    }
+
+    if (shape === "square") {
+      buttonProps.className = className
+      buttonProps.style = {
+        width: `${width}px`,
+        height: `${height}px`,
+        borderRadius: '8px'
+      }
+    }
+
+    if (shape === "round") {
+      buttonProps.className = className
+      buttonProps.style = {
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '50%'
+      }
+    }
 
     return (
-        <Button onClick={onClick} className={className}>
+        <Button {...buttonProps}>
             {label}
         </Button>
     )

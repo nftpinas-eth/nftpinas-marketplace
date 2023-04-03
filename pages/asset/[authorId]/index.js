@@ -2,10 +2,13 @@ import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+
 //import { data } from 'autoprefixer'
 import Image from 'next/image'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
+import NftCard from '../../../components/NFTCard/nftcard'
+
 
 const fetchData = async (id) => {
     const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${id}`)
@@ -29,13 +32,16 @@ const style = {
 
 const AuthorId = () => {
     const router = useRouter()
-    const { authorId } = router.query
 
     const nftId = typeof router.query?.authorId === "string" ? router.query.authorId : "";
 
     const { data, isLoading, isFetching } = useQuery(["getNft", nftId], () => fetchData(nftId), {
         enabled: true
     })
+
+    const clickOnNft = (_address, _tokenId) => {
+        router.push(`/asset/${_address}/${_tokenId}`)
+    }
 
     if (isLoading) {
         return <div className="center">Loading...</div>;
@@ -44,10 +50,25 @@ const AuthorId = () => {
     if (!data) return <div>No Data Found</div>
    
     return (
-        <>
-
-        </>
-    )
+        <div className="flex flex-row justify-center item-center">
+            <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4 m-[5rem]">
+              {data.data.map((nft) => 
+                <NftCard 
+                key={nft.tokenId}
+                src={nft.metadata.image}
+                alt="NFT Image Preview"
+                title={nft.metadata.name}
+                description={nft.metadata.description}
+                price={nft.price}
+                isListed={false}
+                tokenId={nft.tokenId}
+                creator={nft.owner_address}
+                onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)}
+              />
+              )}
+            </div>
+        </div>
+      )
 }
 
 export default AuthorId
