@@ -15,22 +15,15 @@ import Link from "next/link"
 import { useState, useEffect , useContext} from "react"
 import { useRouter } from 'next/router'
 
-
-//Import Libraries
-import { ethers } from 'ethers'
-
-
 //Internal Import
 import nftpinas_logo from "../assets/logo.png"
 import irvin_wagmi from "../assets/irvin.jpg"
-import { MarketplaceContext } from '../context/MarketplaceContext'
+import { WalletContext } from '../context/WalletContext'
 import Button from '../components/Buttons/button'
-
-
 
 const HeaderNew = () => {
     const router = useRouter()
-    const { connectWallet, address } = useContext(MarketplaceContext)
+    const { connectWallet, address } = useContext(WalletContext)
     const [isFocused, setIsFocused] = useState(false)
     const [activeIndex, setActiveIndex] = useState(null);
     const [ toggleMenu, setToggleMenu] = React.useState(false) // Toggle Mobile Menu
