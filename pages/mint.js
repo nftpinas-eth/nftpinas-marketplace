@@ -1,27 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react'
-//import { Button } from 'react-bootstrap'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Image from 'next/image'
 import Input from '../components/Input/input'
 import Button from '../components/Buttons/button'
 import { client } from "../lib/infura_client"
 
 // Marketplace Context Import
-import { MarketplaceContext } from '../context/MarketplaceContext'
-
+import { MarketplaceActionsContext } from '../context/MarketplaceActionsContext'
 
 const Mint = () => {
-    const { initializeContract, mintNFT } = useContext(MarketplaceContext)
+    const { mintNFT } = useContext(MarketplaceActionsContext)
     const [ file, setFile ] = useState('')
     const [ url, setUrl ] = useState([])
     const [ name, setName ] = useState('')
     const [ description, setDescription ] = useState('')
-    const [ value, setValue ] = useState('')
     const [ imagePreview, setImagePreview ] = useState(false)
     const [ image, setImage ] = useState('')
-    const [traitTypeInputs, setTraitTypeInputs] = useState([{ trait_type: "", value: "" }])
-
+    const [ traitTypeInputs, setTraitTypeInputs ] = useState([{ trait_type: "", value: "" }])
 
     const uploadToIPFS = async (e) => {
         e.preventDefault()
@@ -37,7 +31,6 @@ const Mint = () => {
                 setImagePreview(true)
                 const result = await client.add(file)
                 setImage(`https://nftpinas.infura-ipfs.io/ipfs/${result.path}`)
-                initializeContract()
             }
             catch (error) {
                 alert("Error Uploading Image", error)
