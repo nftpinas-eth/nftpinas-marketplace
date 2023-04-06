@@ -9,18 +9,17 @@ import LoadingPage from '../../../../components/Loading/loading'
 import Input from '../../../../components/Input/input'
 
 // Marketplace Context Import
-import { MarketplaceContext } from '../../../../context/MarketplaceContext'
+import { MarketplaceActionsContext } from '../../../../context/MarketplaceActionsContext'
 
 const fetchData = async (_authorId, _tokenId) => {
     const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${_authorId}/${_tokenId}`)
     return data
 }
 
-const NFTCardPage = () => {
+const NFTPage = () => {
     const router = useRouter()
-    const [ showModal, setShowModal ] = useState(false)
     const [ price, setPrice ] = useState(0)
-    const { initializeContract, listItem, buyNFT, marketplace } = useContext(MarketplaceContext)
+    const { listItem, buyNFT } = useContext(MarketplaceActionsContext)
     const _authorId = typeof router.query?.authorId === "string" ? router.query.authorId : "";
     const _tokenId = typeof router.query?.tokenId === "string" ? router.query.tokenId : "";
 
@@ -94,4 +93,4 @@ const NFTCardPage = () => {
     )
 }
 
-export default NFTCardPage
+export default NFTPage

@@ -2,11 +2,6 @@ import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-
-//import { data } from 'autoprefixer'
-import Image from 'next/image'
-import Header from '../../../components/Header'
-import Footer from '../../../components/Footer'
 import NftCard from '../../../components/NFTCard/nftcard'
 
 
@@ -30,7 +25,7 @@ const style = {
     socialIcon: `my-2`
 }
 
-const AuthorId = () => {
+const AuthorPage = () => {
     const router = useRouter()
 
     const nftId = typeof router.query?.authorId === "string" ? router.query.authorId : "";
@@ -71,4 +66,4 @@ const AuthorId = () => {
       )
 }
 
-export default AuthorId
+export default AuthorPage
