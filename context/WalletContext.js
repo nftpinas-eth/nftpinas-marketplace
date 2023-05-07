@@ -25,6 +25,8 @@ const WalletProvider = ({ children }) => {
         setProvider(web3Provider);
         const web3Signer = web3Provider.getSigner();
         setSigner(web3Signer);
+        localStorage.setItem("walletAddress", account[0]);
+
       } catch (error) {
         if (error.code === 4902) {
           try {
@@ -54,25 +56,56 @@ const WalletProvider = ({ children }) => {
     }
   };
 
+  // useEffect(() => {
+  //   const handleChainChanged = () => {
+  //     window.location.reload();
+  //   };
+  
+  //   const handleAccountsChanged = async (accounts) => {
+  //     setAddress(accounts[0]);
+  //     await connectWallet();
+  //   };
+  
+  //   if (window.ethereum) {
+      
+  //     window.ethereum.on("chainChanged", handleChainChanged);
+  //     window.ethereum.on("accountsChanged", handleAccountsChanged);
+  
+  //     return () => {
+  //       if (window.ethereum) {
+  //         window.ethereum.removeListener("chainChanged", handleChainChanged);
+  //         window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+  //       }
+  //     };
+  //   }
+  // }, []);
+
   useEffect(() => {
-    const handleChainChanged = async () => {
-      window.ethereum.on("chainChanged", () => {
-        window.location.reload();
-      });
+    // Load the address from localStorage
+    const storedAddress = localStorage.getItem("walletAddress");
+    if (storedAddress) {
+      setAddress(storedAddress);
+
+      // Initialize provider and signer with the stored address
+      const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      setProvider(web3Provider);
+      const web3Signer = web3Provider.getSigner();
+      setSigner(web3Signer);
+    }
+
+    const handleChainChanged = () => {
+      window.location.reload();
     };
-  
+
     const handleAccountsChanged = async (accounts) => {
-      window.ethereum.on("accountsChanged", async (account) => {
-        setAddress(account[0]);
-        await connectWallet();
-      });
+      setAddress(accounts[0]);
+      await connectWallet();
     };
-  
+
     if (window.ethereum) {
-      handleChainChanged();
       window.ethereum.on("chainChanged", handleChainChanged);
       window.ethereum.on("accountsChanged", handleAccountsChanged);
-  
+
       return () => {
         if (window.ethereum) {
           window.ethereum.removeListener("chainChanged", handleChainChanged);
@@ -81,6 +114,7 @@ const WalletProvider = ({ children }) => {
       };
     }
   }, []);
+
 
   return (
     <WalletContext.Provider value={{ connectWallet, address, provider, signer }}>

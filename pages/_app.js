@@ -6,7 +6,7 @@ import Footer from "../components/Footer"
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { WalletProvider } from "../context/WalletContext";
-import { ContractContextProvider } from "../context/ContractContext";
+import { ContractsContextProvider } from "../context/ContractsContext";
 import { MarketplaceActionsProvider } from "../context/MarketplaceActionsContext";
 import { DataFetchProvider } from "../context/DataFetchContext";
 
@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
-        <ContractContextProvider>
+        <ContractsContextProvider>
           <MarketplaceActionsProvider>
             <DataFetchProvider>
               <div className="flex flex-col min-h-screen bg-[#1F1D1B]">
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
               </div>
             </DataFetchProvider>
           </MarketplaceActionsProvider>
-        </ContractContextProvider>
+        </ContractsContextProvider>
       </WalletProvider>
     </QueryClientProvider>
   );

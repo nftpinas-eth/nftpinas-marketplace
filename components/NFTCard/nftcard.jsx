@@ -4,17 +4,26 @@ import { FaEthereum } from "react-icons/fa"
 import { CgProfile } from "react-icons/cg"
 import { useRouter } from 'next/router';
 
-const NftCard = ({ src, alt, title, description, price, isListed, marketId, tokenId, creator, onClick }) => {
-  const router = useRouter()
-  const goToAuthorPage = (address) => {
-    router.push(`/asset/${address}`)
+function ipfsToHttpsUrl(ipfsUrl) {
+  if (ipfsUrl.startsWith('ipfs://')) {
+    return `https://ipfs.io/ipfs/${ipfsUrl.slice(7)}`;
   }
+  return ipfsUrl;
+}
+
+const NftCard = ({ src, alt, title, description, price, isListed, marketId, tokenId, creator, onClick }) => {
+  const router = useRouter();
+  const imageUrl = ipfsToHttpsUrl(src);
+
+  const goToAuthorPage = (address) => {
+    router.push(`/asset/${address}`);
+  };
   
   return (
-    <div  className='flex flex-col w-[300px] h-[470px] px-[14px] mx-auto bg-[#2A292B] drop-shadow-md rounded-xl '>
-    <div className='relative w-[270px] h-[250px] my-[14px]'>
+    <div className='flex flex-col w-[300px] h-[470px] px-[14px] mx-auto bg-[#2A292B] drop-shadow-md rounded-xl '>
+      <div className='relative w-[270px] h-[250px] my-[14px]'>
         <Image onClick={onClick}
-            src={src}
+            src={imageUrl || "https://lh3.googleusercontent.com/rkb24kmM_4EQm6OZ8FR-pm-AUoMystofkv47eGmxXpSc4xwQOoqZoQqNWEPqm7eyBLSJ3zqFPHjkUvvpgxiuQj0pge-19OLa0zMDcw=w600"}
             alt={alt}
             layout='fill'
             objectFit='fit'

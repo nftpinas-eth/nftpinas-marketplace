@@ -5,8 +5,8 @@ import { useRouter } from 'next/router'
 import NftCard from '../../../components/NFTCard/nftcard'
 
 
-const fetchData = async (id) => {
-    const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/${id}`)
+const fetchData = async (ownerAddress) => {
+    const { data } = await axios.get(`https://api.nftpinas.io/v1/nfts/zksync-testnet/owner/${ownerAddress}`)
     return data
 }
 
@@ -57,8 +57,8 @@ const AuthorPage = () => {
                 price={nft.price}
                 isListed={false}
                 tokenId={nft.tokenId}
-                creator={nft.owner_address}
-                onClick={()=>clickOnNft(nft.owner_address, nft.tokenId)}
+                creator={nft.owner}
+                onClick={()=>clickOnNft(nft.contractAddress, nft.tokenId)}
               />
               )}
             </div>

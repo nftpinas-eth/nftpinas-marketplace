@@ -6,6 +6,10 @@ import { GrTransaction } from "react-icons/gr";
 import Button from '../components/Buttons/button'
 
 const Hero = () => {
+  const handleLearnMore = () => {
+    window.open("https://bounties.gitcoin.co/grants/7010/nft-pinas-nft-marketplace-built-on-ethereum-layer");
+  }
+
   return (
     <div className="bg-[#1F1D1B] w-full items-center justify-center flex flex-col min-w-[360px]">
       <div className="max-w-[1280px] flex justify-between items-center md:flex-row md:m-[8rem] mx-auto ">
@@ -14,7 +18,7 @@ const Hero = () => {
           <div className="font-mono text-[#FFFFFF] text-sm mt-[0.8rem] mb-[2.5rem]">
             NFTPinas offers fast, cheap, and secured transactions in zkSync Era.
           </div>
-          <Button height={40} width={270} shape="square" label="Learn More"/>
+          <Button height={40} width={270} shape="square" label="Learn More" onClick={handleLearnMore} />
         </div>
 
         <div className="flex justify-content items-start flex-col md:mx-10 mx-10 my-[3rem]">

@@ -1,17 +1,17 @@
 import React, { createContext, useState, useContext } from "react";
 import { ethers } from "ethers";
-import { ContractContext } from "./ContractContext";
+import { ContractsContext } from "./ContractsContext";
 import axios from "axios";
 
 const DataFetchContext = createContext();
 
 const DataFetchProvider = ({ children }) => {
-  const { contract } = useContext(ContractContext);
-  const [marketplaceData, setMarketplaceData] = useState([]);
+  const { marketplaceContract } = useContext(ContractsContext);
+  const [ marketplaceData, setMarketplaceData ] = useState([]);
 
   const fetchMarketItems = async () => {
     try {
-      const data = await contract.fetchMarketItems();
+      const data = await marketplaceContract.fetchMarketItems();
       const items = await Promise.all(
         data.map(async ({ itemId, tokenId, seller, owner, price: unformattedPrice }) => {
           const price = ethers.utils.formatUnits(unformattedPrice.toString(), "ether");
@@ -29,13 +29,13 @@ const DataFetchProvider = ({ children }) => {
 
   const convertString = (convert) => async (_tokenId) => {
     if (convert === "owner") {
-      const owner = await contract.ownerOf(_tokenId);
+      const owner = await marketplaceContract.ownerOf(_tokenId);
       return owner.toLowerCase();
     }
   };
 
   const fetchAllNfts = async () => {
-    const tokenCount = await contract.tokenIds();
+    const tokenCount = await marketplaceContract.tokenIds();
     const tokenId = tokenCount.toNumber();
     const fetchResponse = await axios.get("https://api.nftpinas.io/v1/nfts/");
     const fetchResult = fetchResponse.data.result;
@@ -43,7 +43,7 @@ const DataFetchProvider = ({ children }) => {
     const promises = [];
     for (let i = fetchResult + 1; i <= tokenId; i++) {
       const owner = await convertString("owner")(i);
-      const uri = await contract.tokenURI(i);
+      const uri = await marketplaceContract.tokenURI(i);
       promises.push(Promise.all([owner, i, uri, axios.get(uri)]));
     }
     const responses = await Promise.all(promises);

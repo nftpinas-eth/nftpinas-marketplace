@@ -38,3 +38,35 @@ html, body {
 .grid-rows-layout {
   grid-template-rows: auto 1fr auto;
 }
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 50%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-40px) translateX(40px);
+  }
+  75% {
+    transform: translateY(-40px) translateX(-40px);
+  }
+}
+
+.delay-0 {
+  animation-delay: 0s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-600 {
+  animation-delay: 0.6s;
+}
